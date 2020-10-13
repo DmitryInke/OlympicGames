@@ -1,0 +1,4 @@
+#eclipse + maven
+.classpath
+.project
+target/
