@@ -1,6 +1,6 @@
 package org.afeka.oop.model;
 
-public class Sportsman extends Person {
+public class Sportsman extends Person implements CompetitorsDetails {
 
 	public Sportsman(String name, Country country, SPORT_TYPE sportType) {
 		super(name, country, sportType);

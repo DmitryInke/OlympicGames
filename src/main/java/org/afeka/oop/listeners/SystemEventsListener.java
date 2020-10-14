@@ -1,13 +1,15 @@
 package org.afeka.oop.listeners;
 
-import org.afeka.oop.model.*;
-
+import org.afeka.oop.model.Competition;
+import org.afeka.oop.model.Country;
+import org.afeka.oop.model.Person;
+import org.afeka.oop.model.Sportsman;
+import org.afeka.oop.model.Stadium;
+import org.afeka.oop.model.Team;
 
 public interface SystemEventsListener {
 
 	void createCountryModelEvent(Country country);
-
-	void createCompetitionModelEvent(Competition competition);
 
 	void createPersonModelEvent(Person person);
 
@@ -15,13 +17,20 @@ public interface SystemEventsListener {
 
 	void createTeamModelEvent(Team team);
 
-	void determineTheWinnersInOlympicGamesModelEvent(String[] ranks);
+	void determineTheWinnersInOlympicGamesModelEvent(String[] winners);
 
 	void AddSportsmanToTeamModelEvent(Sportsman newSportsman, Team team);
 
-	void addSportsmanToCompetitionModelEvent(Sportsman newSportsman, SingleCompetition singleCompetition);
+	void addTeamToCompetitionModelEvent(Team team, Competition<Team> competition);
 
-	void addDetermineTheWinnersInCompetition(Competition competition);
+	void addSportsmanToCompetitionModelEvent(Sportsman sportsman, Competition<Sportsman> competition);
 
-	void addTeamToCompetitionModelEvent(Team newTeam, TeamCompetition teamCompetition);
+	void addDetermineTheWinnersInTeamCompetitionModelEvent(Competition<Team> competition);
+
+	void addDetermineTheWinnersInSingleCompetitionModelEvent(Competition<Sportsman> competition);
+
+	void createTeamCompetitionModelEvent(Competition<Team> competition);
+
+	void createSingleCompetitionModelEvent(Competition<Sportsman> competition);
+
 }

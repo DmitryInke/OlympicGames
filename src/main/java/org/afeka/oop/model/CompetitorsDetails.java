@@ -1,8 +1,8 @@
 package org.afeka.oop.model;
 
 public interface CompetitorsDetails {
-	
-	public Country getCountry();
-	
-	public SPORT_TYPE getSportType();
+
+	Country getCountry();
+
+	SPORT_TYPE getSportType();
 }

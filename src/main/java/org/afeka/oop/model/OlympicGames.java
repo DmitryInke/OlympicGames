@@ -5,72 +5,89 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
-import DmitryInke.listeners.SystemEventsListener;
+import org.afeka.oop.listeners.SystemEventsListener;
 
 public class OlympicGames implements IOlympicGames {
 	private Date startDate;
 	private Date endDate;
 	private DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
-	private Enum<SPORT_TYPE> sportType;
-	private ArrayList<Competition> allCompetitions;
-	private ArrayList<Country> allCountries;
-	private ArrayList<Stadium> allStadiums;
-	private ArrayList<Person> allPersons;
-	private ArrayList<Team> allTeams;
-	private String[] ranks;
+	private SPORT_TYPE sportType;
+	private List<Competition<Team>> allTeamsInCompetition;
+	private List<Competition<Sportsman>> allSportsmansInCompetition;
+	private List<Country> allCountries;
+	private List<Stadium> allStadiums;
+	private List<Person> allPersons;
+	private List<Team> allTeams;
+	private String[] winners;
 	private ArrayList<SystemEventsListener> listeners;
 
 	public OlympicGames() {
-		this.allCompetitions = new ArrayList<Competition>();
+		this.allTeamsInCompetition = new ArrayList<Competition<Team>>();
+		this.allSportsmansInCompetition = new ArrayList<Competition<Sportsman>>();
 		this.allCountries = new ArrayList<Country>();
 		this.allStadiums = new ArrayList<Stadium>();
 		this.allPersons = new ArrayList<Person>();
 		this.allTeams = new ArrayList<Team>();
-		this.ranks = new String[3];
+		this.winners = new String[3];
 		this.listeners = new ArrayList<SystemEventsListener>();
+	}
+
+	public List<Competition<Team>> getAllTeamsInCompetition() {
+		return allTeamsInCompetition;
+	}
+
+	public List<Competition<Sportsman>> getAllSportsmansInCompetition() {
+		return allSportsmansInCompetition;
 	}
 
 	public void registerListener(SystemEventsListener listener) {
 		listeners.add(listener);
 	}
 
-	public ArrayList<Competition> getAllCompetitions() {
-		return allCompetitions;
-	}
-
-	public ArrayList<Country> getAllCountries() {
+	public List<Country> getAllCountries() {
 		return allCountries;
 	}
 
-	public ArrayList<Stadium> getAllStadiums() {
+	public List<Stadium> getAllStadiums() {
 		return allStadiums;
 	}
 
-	public ArrayList<Person> getAllPersons() {
+	public List<Person> getAllPersons() {
 		return allPersons;
 	}
 
-	public ArrayList<Team> getAllTeams() {
+	public List<Team> getAllTeams() {
 		return allTeams;
 	}
 
-	public String[] getRanks() {
-		return ranks;
+	public String[] getWinners() {
+		return winners;
 	}
 
-	public Enum<SPORT_TYPE> getSportType() {
+	public SPORT_TYPE getSportType() {
 		return sportType;
 	}
 
-	public void createCompetition(Competition newCompetition) throws Exception {
-		for (int i = 0; i < allCompetitions.size(); i++) {
-			if (allCompetitions.get(i).equals(newCompetition)) {
+	public void createTeamCompetition(Competition<Team> newCompetition) throws Exception {
+		for (int i = 0; i < allTeamsInCompetition.size(); i++) {
+			if (allTeamsInCompetition.get(i).equals(newCompetition)) {
 				throw new Exception("This competition already exists");
 			}
 		}
-		allCompetitions.add(newCompetition);
-		fireCreateCompetitionEvent(newCompetition);
+		allTeamsInCompetition.add(newCompetition);
+		fireCreateTeamCompetitionEvent(newCompetition);
+	}
+
+	public void createSingleCompetition(Competition<Sportsman> newCompetition) throws Exception {
+		for (int i = 0; i < allSportsmansInCompetition.size(); i++) {
+			if (allSportsmansInCompetition.get(i).equals(newCompetition)) {
+				throw new Exception("This competition already exists");
+			}
+		}
+		allSportsmansInCompetition.add(newCompetition);
+		fireCreateSingleCompetitionEvent(newCompetition);
 	}
 
 	public void createCountry(Country newCountry) throws Exception {
@@ -115,7 +132,7 @@ public class OlympicGames implements IOlympicGames {
 	}
 
 	public void determineTheWinnersInOlympicGames() throws Exception {
-		if (allCompetitions.size() < 1) {
+		if (allSportsmansInCompetition.size() + allTeamsInCompetition.size() < 1) {
 			throw new Exception("It is impossible to determine the winner without competition");
 		}
 		if (allCountries.size() < 3) {
@@ -123,51 +140,62 @@ public class OlympicGames implements IOlympicGames {
 					"It is impossible It is impossible to determine the winner if there are less than 3 countries");
 		}
 		Collections.sort(allCountries, new CompareCountryByMedals());
-		for (int i = 0; i < ranks.length; i++) {
-			ranks[i] = allCountries.get(i).getName();
+		for (int i = 0; i < winners.length; i++) {
+			winners[i] = allCountries.get(i).getName();
+			System.out.println(winners[i] + " "+ allCountries.get(i).getNumOfMedals());
 		}
-		fireDetermineTheWinnersInOlympicGamesEvent(ranks);
+		fireDetermineTheWinnersInOlympicGamesEvent(winners);
 
 	}
 
 	public void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception {
-			team.addSportsmanToTeam(newSportsman);
-			fireAddSportsmanToTeam(newSportsman, team);
-		}
-	
-
-	public void addSportsmanToCompetition(Sportsman newSportsman, SingleCompetition singleCompetition) throws Exception {
-				singleCompetition.addSportsManToCompetition(newSportsman);
-				fireAddSportsmanToCompetition(newSportsman, singleCompetition);
-			}
-	
-	public void determineTheWinnersInCompetition(Competition competition) throws Exception {
-			competition.determineTheWinners();
-			fireDetermineTheWinnersInCompetition(competition);
-		}
-	
-	public void addTeamToCompetition(Team newTeam, TeamCompetition teamCompetition) throws Exception{
-		teamCompetition.addTeamToCompetition(newTeam);
-		fireAddTeamToCompetition(newTeam, teamCompetition);
+		team.addSportsmanToTeam(newSportsman);
+		fireAddSportsmanToTeam(newSportsman, team);
 	}
 
-	private void fireAddTeamToCompetition(Team newTeam, TeamCompetition teamCompetition) {
-		for (SystemEventsListener l : listeners) {
-			l.addTeamToCompetitionModelEvent(newTeam, teamCompetition);
-		}
-		
+	public void addTeamToCompetition(Team team, Competition<Team> competition) throws Exception {
+		competition.addCompetitorsToCompetition(team);
+		fireAddTeamToCompetition(team, competition);
 	}
 
-	private void fireDetermineTheWinnersInCompetition(Competition competition) {
-		for (SystemEventsListener l : listeners) {
-			l.addDetermineTheWinnersInCompetition(competition);
-		}
-		
+	public void addSportsmanToCompetition(Sportsman sportsman, Competition<Sportsman> competition) throws Exception {
+		competition.addCompetitorsToCompetition(sportsman);
+		fireAddSportsmanToCompetition(sportsman, competition);
 	}
 
-	private void fireAddSportsmanToCompetition(Sportsman newSportsman, SingleCompetition singleCompetition) {
+	public void determineTheWinnersInTeamCompetition(Competition<Team> competition) throws Exception {
+		competition.determineTheWinners();
+		fireDetermineTheWinnersInTeamCompetition(competition);
+	}
+
+	public void determineTheWinnersInSingleCompetition(Competition<Sportsman> competition) throws Exception {
+		competition.determineTheWinners();
+		fireDetermineTheWinnersInSingleCompetition(competition);
+	}
+
+	private void fireAddTeamToCompetition(Team team, Competition<Team> competition) {
 		for (SystemEventsListener l : listeners) {
-			l.addSportsmanToCompetitionModelEvent(newSportsman, singleCompetition);
+			l.addTeamToCompetitionModelEvent(team, competition);
+		}
+	}
+
+	private void fireAddSportsmanToCompetition(Sportsman sportsman, Competition<Sportsman> competition) {
+		for (SystemEventsListener l : listeners) {
+			l.addSportsmanToCompetitionModelEvent(sportsman, competition);
+		}
+
+	}
+
+	private void fireDetermineTheWinnersInTeamCompetition(Competition<Team> competition) {
+		for (SystemEventsListener l : listeners) {
+			l.addDetermineTheWinnersInTeamCompetitionModelEvent(competition);
+		}
+
+	}
+
+	private void fireDetermineTheWinnersInSingleCompetition(Competition<Sportsman> competition) {
+		for (SystemEventsListener l : listeners) {
+			l.addDetermineTheWinnersInSingleCompetitionModelEvent(competition);
 		}
 
 	}
@@ -179,16 +207,22 @@ public class OlympicGames implements IOlympicGames {
 
 	}
 
-	private void fireDetermineTheWinnersInOlympicGamesEvent(String[] ranks) {
+	private void fireDetermineTheWinnersInOlympicGamesEvent(String[] winners) {
 		for (SystemEventsListener l : listeners) {
-			l.determineTheWinnersInOlympicGamesModelEvent(ranks);
+			l.determineTheWinnersInOlympicGamesModelEvent(winners);
 		}
 
 	}
 
-	private void fireCreateCompetitionEvent(Competition competition) {
+	private void fireCreateTeamCompetitionEvent(Competition<Team> competition) {
 		for (SystemEventsListener l : listeners) {
-			l.createCompetitionModelEvent(competition);
+			l.createTeamCompetitionModelEvent(competition);
+		}
+	}
+
+	private void fireCreateSingleCompetitionEvent(Competition<Sportsman> competition) {
+		for (SystemEventsListener l : listeners) {
+			l.createSingleCompetitionModelEvent(competition);
 		}
 	}
 

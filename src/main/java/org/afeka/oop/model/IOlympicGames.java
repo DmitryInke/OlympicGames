@@ -1,44 +1,50 @@
 package org.afeka.oop.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import DmitryInke.listeners.SystemEventsListener;
+import org.afeka.oop.listeners.SystemEventsListener;
 
 public interface IOlympicGames {
 
-	public ArrayList<Competition> getAllCompetitions();
+	List<Competition<Team>> getAllTeamsInCompetition();
 
-	public ArrayList<Country> getAllCountries();
+	List<Competition<Sportsman>> getAllSportsmansInCompetition();
 
-	public ArrayList<Stadium> getAllStadiums();
+	List<Country> getAllCountries();
 
-	public ArrayList<Person> getAllPersons();
+	List<Stadium> getAllStadiums();
 
-	public ArrayList<Team> getAllTeams();
+	List<Person> getAllPersons();
 
-	public String[] getRanks();
-	
-	public Enum<SPORT_TYPE> getSportType();
+	List<Team> getAllTeams();
 
-	public void registerListener(SystemEventsListener systemController);
+	String[] getWinners();
 
-	public void createCompetition(Competition newCompetition) throws Exception;
+	SPORT_TYPE getSportType();
 
-	public void createCountry(Country newCountry) throws Exception;
+	void registerListener(SystemEventsListener systemController);
 
-	public void createStadium(Stadium newStadium) throws Exception;
+	void createTeamCompetition(Competition<Team> newCompetition) throws Exception;
 
-	public void createPerson(Person newPerson) throws Exception;
+	void createSingleCompetition(Competition<Sportsman> newCompetition) throws Exception;
 
-	public void createTeam(Team newTeam) throws Exception;
-	
-	public void determineTheWinnersInOlympicGames() throws Exception;
-	
-	public void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception;
-	
-	public void addSportsmanToCompetition(Sportsman newSportsman, SingleCompetition singleCompetition) throws Exception;
-	
-	public void determineTheWinnersInCompetition(Competition competition) throws Exception;
-	
-	public void addTeamToCompetition(Team newTeam, TeamCompetition teamCompetition) throws Exception;
+	void createCountry(Country newCountry) throws Exception;
+
+	void createStadium(Stadium newStadium) throws Exception;
+
+	void createPerson(Person newPerson) throws Exception;
+
+	void createTeam(Team newTeam) throws Exception;
+
+	void determineTheWinnersInOlympicGames() throws Exception;
+
+	void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception;
+
+	void addTeamToCompetition(Team team, Competition<Team> competition) throws Exception;
+
+	void addSportsmanToCompetition(Sportsman sportsman, Competition<Sportsman> competition) throws Exception;
+
+	void determineTheWinnersInTeamCompetition(Competition<Team> competition) throws Exception;
+
+	void determineTheWinnersInSingleCompetition(Competition<Sportsman> competition) throws Exception;
 }

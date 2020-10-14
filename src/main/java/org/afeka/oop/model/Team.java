@@ -1,10 +1,11 @@
 package org.afeka.oop.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Team {
+public class Team implements CompetitorsDetails {
 	private SPORT_TYPE sportType;
-	private ArrayList<Sportsman> allSportsmans;
+	private List<Sportsman> allSportsmans;
 	private Country country;
 
 	public Team(SPORT_TYPE sportType, Country country) {
@@ -17,28 +18,24 @@ public class Team {
 		return sportType;
 	}
 
-	public ArrayList<Sportsman> getAllSportsmans() {
+	public List<Sportsman> getAllSportsmans() {
 		return allSportsmans;
 	}
 
 	public Country getCountry() {
 		return country;
 	}
-	
+
 	public int teamSize() {
 		return allSportsmans.size();
 	}
 
 	public void addSportsmanToTeam(Sportsman newSportsman) throws Exception {
-		if (newSportsman.getSportType() != getSportType() || newSportsman.getCountry() != getCountry()) {
-			throw new Exception("This sportsman is not fit in the team");
-		} else {
-			for (int i = 0; i < allSportsmans.size(); i++) {
-				if (allSportsmans.get(i).equals(newSportsman)) {
-					throw new Exception("This sportsman already exists in team");
-				}
-			}
+		if ((newSportsman.getSportType() == SPORT_TYPE.BOTH || getSportType().equals(newSportsman.getSportType()))
+				&& newSportsman.getCountry() == getCountry() && !allSportsmans.contains(newSportsman)) {
 			allSportsmans.add(newSportsman);
+		} else {
+			throw new Exception("This sportsman is not fit in the team");
 		}
 	}
 
