@@ -1,4 +1,5 @@
 #eclipse + maven
+.settings/
 .classpath
 .project
 target/
