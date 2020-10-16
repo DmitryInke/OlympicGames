@@ -1,36 +1,31 @@
 package org.afeka.oop.listeners;
 
-import org.afeka.oop.model.Competition;
-import org.afeka.oop.model.Country;
-import org.afeka.oop.model.Person;
-import org.afeka.oop.model.Sportsman;
-import org.afeka.oop.model.Stadium;
-import org.afeka.oop.model.Team;
+import org.afeka.oop.model.*;
 
 public interface SystemEventsListener {
 
-	void createCountryModelEvent(Country country);
+    void createCountryModelEvent(Country country);
 
-	void createPersonModelEvent(Person person);
+    void createPersonModelEvent(Person person);
 
-	void createStadiumModelEvent(Stadium stadium);
+    void createStadiumModelEvent(Stadium stadium);
 
-	void createTeamModelEvent(Team team);
+    void createTeamModelEvent(Team team);
 
-	void determineTheWinnersInOlympicGamesModelEvent(String[] winners);
+    void determineTheWinnersInOlympicGamesModelEvent(String[] winners);
 
-	void AddSportsmanToTeamModelEvent(Sportsman newSportsman, Team team);
+    void addSportsmanToTeamModelEvent(Sportsman newSportsman, Team team);
 
-	void addTeamToCompetitionModelEvent(Team team, Competition<Team> competition);
+    void addTeamToCompetitionModelEvent(Team team, Competition<Team> competition);
 
-	void addSportsmanToCompetitionModelEvent(Sportsman sportsman, Competition<Sportsman> competition);
+    void addSportsmanToCompetitionModelEvent(Sportsman sportsman, Competition<Sportsman> competition);
 
-	void addDetermineTheWinnersInTeamCompetitionModelEvent(Competition<Team> competition);
+    void determineTheWinnersInTeamCompetitionModelEvent(Competition<Team> competition);
 
-	void addDetermineTheWinnersInSingleCompetitionModelEvent(Competition<Sportsman> competition);
+    void determineTheWinnersInSingleCompetitionModelEvent(Competition<Sportsman> competition);
 
-	void createTeamCompetitionModelEvent(Competition<Team> competition);
+    void createTeamCompetitionModelEvent(Competition<Team> competition);
 
-	void createSingleCompetitionModelEvent(Competition<Sportsman> competition);
+    void createSingleCompetitionModelEvent(Competition<Sportsman> competition);
 
 }

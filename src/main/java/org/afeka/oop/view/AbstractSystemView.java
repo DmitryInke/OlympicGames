@@ -1,37 +1,38 @@
 package org.afeka.oop.view;
 
 import org.afeka.oop.listeners.SystemUIEventsListener;
-import org.afeka.oop.model.Competition;
-import org.afeka.oop.model.Country;
-import org.afeka.oop.model.Person;
-import org.afeka.oop.model.Sportsman;
-import org.afeka.oop.model.Stadium;
-import org.afeka.oop.model.Team;
+import org.afeka.oop.model.*;
 
 public interface AbstractSystemView {
 
-	void registerListener(SystemUIEventsListener newListener);
+    void registerListener(SystemUIEventsListener newListener);
 
-	void createCountryViewEvent(Country country);
+    void createCountryViewEvent(Country country);
 
-	void createPersonViewEvent(Person person);
+    void createPersonViewEvent(Person person);
 
-	void createStadiumViewEvent(Stadium stadium);
+    void createStadiumViewEvent(Stadium stadium);
 
-	void createTeamViewEvent(Team team);
+    void createTeamViewEvent(Team team);
 
-	void AddSportsmanToTeamViewEvent(Sportsman newSportsman, Team team);
+    void addSportsmanToTeamViewEvent(Sportsman newSportsman, Team team);
 
-	void addTeamToCompetitionViewEvent(Team team, Competition<Team> competition);
+    void addDetermineTheWinnersInTeamCompetitionViewEvent(Competition<Team> competition);
 
-	void addSportsmanToCompetitionViewEvent(Sportsman sportsman, Competition<Sportsman> competition);
+    void addDetermineTheWinnersInSingleCompetitionViewEvent(Competition<Sportsman> competition);
 
-	void createTeamCompetitionViewEvent(Competition<Team> competition);
+    void determineTheWinnersInOlympicGamesViewEvent(String[] winners);
 
-	void createSingleCompetitionViewEvent(Competition<Sportsman> competition);
+    void addTeamToCompetitionViewEvent(Team team, Competition<Team> competition);
 
-	void successfulMessage(String msg);
+    void addSportsmanToCompetitionViewEvent(Sportsman sportsman, Competition<Sportsman> competition);
 
-	void exceptionMessage(String msg);
+    void createTeamCompetitionViewEvent(Competition<Team> competition);
+
+    void createSingleCompetitionViewEvent(Competition<Sportsman> competition);
+
+    void successfulMessage(String msg);
+
+    void exceptionMessage(String msg);
 
 }

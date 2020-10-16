@@ -1,36 +1,24 @@
 package org.afeka.oop;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.afeka.oop.controller.SystemController;
+import org.afeka.oop.model.IOlympicGames;
+import org.afeka.oop.model.OlympicGames;
+import org.afeka.oop.view.AbstractSystemView;
+import org.afeka.oop.view.SystemJavaFX;
 
 public class Program extends Application {
+    public static IOlympicGames system;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle("Hello World!");
-		Button btn = new Button();
-		btn.setText("Say 'Hello World'");
-		btn.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				System.out.println("Hello World!");
-			}
-		});
-
-		StackPane root = new StackPane();
-		root.getChildren().add(btn);
-		primaryStage.setScene(new Scene(root, 300, 250));
-		primaryStage.show();
-	}
+    @Override
+    public void start(Stage primaryStage) {
+        IOlympicGames theModel = new OlympicGames();
+        AbstractSystemView theView = new SystemJavaFX(primaryStage);
+        SystemController controller = new SystemController(theModel, theView);
+    }
 }

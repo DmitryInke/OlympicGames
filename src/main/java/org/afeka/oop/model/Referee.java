@@ -1,23 +1,23 @@
 package org.afeka.oop.model;
 
-public class Referee extends Person{
+public class Referee extends Person {
 
-	public Referee(String name, Country country, SPORT_TYPE sportType) {
-		super(name, country, sportType);
-	}
-	
-	public boolean equals(Object other) {
-		if (!(other instanceof Referee))
-			return false;
+    public Referee(String name, Country country, SPORT_TYPE sportType) {
+        super(name, country, sportType);
+    }
 
-		if (!(super.equals(other)))
-			return false;
+    public boolean equals(Object other) {
+        if (!(other instanceof Referee))
+            return false;
 
-		return true;
-	}
+        if (!(super.equals(other)))
+            return false;
 
-	public String toString() {
-		StringBuffer sb = new StringBuffer(super.toString());
-		return sb.toString();
-	}
+        return true;
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer(super.toString());
+        return sb.toString();
+    }
 }
