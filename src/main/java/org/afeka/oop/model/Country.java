@@ -39,12 +39,12 @@ public class Country {
         if (!(other instanceof Country))
             return false;
         Country temp = (Country) other;
-        return name == temp.name;
+        return name.equalsIgnoreCase(temp.name);
     }
 
     @Override
     public String toString() {
-        return "Country [name=" + name + ", numOfMedals=" + numOfMedals + "]";
+        return getName();
     }
 
 }

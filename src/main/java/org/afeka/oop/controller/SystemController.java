@@ -45,42 +45,6 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void determineTheWinnersInOlympicGamesModelEvent(String[] winners) {
-        systemView.determineTheWinnersInOlympicGamesViewEvent(winners);
-
-    }
-
-    @Override
-    public void addSportsmanToTeamModelEvent(Sportsman newSportsman, Team team) {
-        systemView.addSportsmanToTeamViewEvent(newSportsman, team);
-
-    }
-
-    @Override
-    public void addTeamToCompetitionModelEvent(Team team, Competition<Team> competition) {
-        systemView.addTeamToCompetitionViewEvent(team, competition);
-
-    }
-
-    @Override
-    public void addSportsmanToCompetitionModelEvent(Sportsman sportsman, Competition<Sportsman> competition) {
-        systemView.addSportsmanToCompetitionViewEvent(sportsman, competition);
-
-    }
-
-    @Override
-    public void determineTheWinnersInTeamCompetitionModelEvent(Competition<Team> competition) {
-        systemView.addDetermineTheWinnersInTeamCompetitionViewEvent(competition);
-
-    }
-
-    @Override
-    public void determineTheWinnersInSingleCompetitionModelEvent(Competition<Sportsman> competition) {
-        systemView.addDetermineTheWinnersInSingleCompetitionViewEvent(competition);
-
-    }
-
-    @Override
     public void createTeamCompetitionModelEvent(Competition<Team> competition) {
         systemView.createTeamCompetitionViewEvent(competition);
 
@@ -123,11 +87,6 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public SPORT_TYPE getSportType() {
-        return systemModel.getSportType();
-    }
-
-    @Override
     public void showAllDataViewEvent() {
         for (Competition<Team> competition : systemModel.getAllTeamsInCompetition()) {
             systemView.createTeamCompetitionViewEvent(competition);
@@ -155,16 +114,43 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void createCountryViewEvent(Country country) {
-        // TODO Auto-generated method stub
-
+    public void createCountryViewEvent(String name) {
+        if (name.startsWith(" ") || name.isEmpty()) {
+            systemView.exceptionMessage("You must enter a name");
+        } else {
+            try {
+                systemModel.createCountry(new Country(name));
+                systemView.successfulMessage("Country are successfully added to the storage");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
     }
 
     @Override
-    public void createStadiumViewEvent(Stadium stadium) {
-        // TODO Auto-generated method stub
-
+    public void createStadiumViewEvent(String name, String address, String capacity) {
+        try {
+            Integer.parseInt(capacity);
+        } catch (Exception e) {
+            systemView.exceptionMessage("You must enter a valid capacity");
+            return;
+        }
+        if (name.startsWith(" ") || name.isEmpty()) {
+            systemView.exceptionMessage("You must enter a name");
+        } else if (address.startsWith(" ") || address.isEmpty()) {
+            systemView.exceptionMessage("You must enter an address");
+        } else if (Integer.parseInt(capacity) > 0) {
+            try {
+                systemModel.createStadium(new Stadium(name, address,Integer.parseInt(capacity)));
+                systemView.successfulMessage("Stadium are successfully added to the storage");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        } else {
+            systemView.exceptionMessage("You must enter a valid capacity");
+        }
     }
+
 
     @Override
     public void createTeamViewEvent(Team team) {

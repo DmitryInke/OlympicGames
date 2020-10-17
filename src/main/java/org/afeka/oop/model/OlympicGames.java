@@ -10,10 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 public class OlympicGames implements IOlympicGames {
-    private Date startDate;
-    private Date endDate;
+
     private DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
-    private SPORT_TYPE sportType;
     private List<Competition<Team>> allTeamsInCompetition;
     private List<Competition<Sportsman>> allSportsmansInCompetition;
     private List<Country> allCountries;
@@ -66,9 +64,6 @@ public class OlympicGames implements IOlympicGames {
         return winners;
     }
 
-    public SPORT_TYPE getSportType() {
-        return sportType;
-    }
 
     public void createTeamCompetition(Competition<Team> newCompetition) throws Exception {
         for (int i = 0; i < allTeamsInCompetition.size(); i++) {
@@ -131,87 +126,43 @@ public class OlympicGames implements IOlympicGames {
 
     }
 
-    public void determineTheWinnersInOlympicGames() throws Exception {
-        if (allSportsmansInCompetition.size() + allTeamsInCompetition.size() < 1) {
-            throw new Exception("It is impossible to determine the winner without competition");
+    public void determineTheWinnersInOlympicGames(Date startDate, Date endDate) throws Exception {
+        if (startDate.before(endDate)) {
+            if (allSportsmansInCompetition.size() + allTeamsInCompetition.size() < 1) {
+                throw new Exception("It is impossible to determine the winner without competition");
+            }
+            if (allCountries.size() < 3) {
+                throw new Exception(
+                        "It is impossible It is impossible to determine the winner if there are less than 3 countries");
+            }
+            Collections.sort(allCountries, new CompareCountryByMedals());
+            for (int i = 0; i < winners.length; i++) {
+                winners[i] = allCountries.get(i).getName();
+                System.out.println(winners[i] + " " + allCountries.get(i).getNumOfMedals());
+            }
+        } else {
+            throw new Exception("Invalid date of the Olympiad " + dateFormat.format(startDate) + " after " + dateFormat.format(endDate));
         }
-        if (allCountries.size() < 3) {
-            throw new Exception(
-                    "It is impossible It is impossible to determine the winner if there are less than 3 countries");
-        }
-        Collections.sort(allCountries, new CompareCountryByMedals());
-        for (int i = 0; i < winners.length; i++) {
-            winners[i] = allCountries.get(i).getName();
-            System.out.println(winners[i] + " " + allCountries.get(i).getNumOfMedals());
-        }
-        fireDetermineTheWinnersInOlympicGamesEvent(winners);
-
     }
 
     public void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception {
         team.addSportsmanToTeam(newSportsman);
-        fireAddSportsmanToTeam(newSportsman, team);
     }
 
     public void addTeamToCompetition(Team team, Competition<Team> competition) throws Exception {
         competition.addCompetitorsToCompetition(team);
-        fireAddTeamToCompetition(team, competition);
     }
 
     public void addSportsmanToCompetition(Sportsman sportsman, Competition<Sportsman> competition) throws Exception {
         competition.addCompetitorsToCompetition(sportsman);
-        fireAddSportsmanToCompetition(sportsman, competition);
     }
 
     public void determineTheWinnersInTeamCompetition(Competition<Team> competition) throws Exception {
         competition.determineTheWinners();
-        fireDetermineTheWinnersInTeamCompetition(competition);
     }
 
     public void determineTheWinnersInSingleCompetition(Competition<Sportsman> competition) throws Exception {
         competition.determineTheWinners();
-        fireDetermineTheWinnersInSingleCompetition(competition);
-    }
-
-    private void fireAddTeamToCompetition(Team team, Competition<Team> competition) {
-        for (SystemEventsListener l : listeners) {
-            l.addTeamToCompetitionModelEvent(team, competition);
-        }
-    }
-
-    private void fireAddSportsmanToCompetition(Sportsman sportsman, Competition<Sportsman> competition) {
-        for (SystemEventsListener l : listeners) {
-            l.addSportsmanToCompetitionModelEvent(sportsman, competition);
-        }
-
-    }
-
-    private void fireDetermineTheWinnersInTeamCompetition(Competition<Team> competition) {
-        for (SystemEventsListener l : listeners) {
-            l.determineTheWinnersInTeamCompetitionModelEvent(competition);
-        }
-
-    }
-
-    private void fireDetermineTheWinnersInSingleCompetition(Competition<Sportsman> competition) {
-        for (SystemEventsListener l : listeners) {
-            l.determineTheWinnersInSingleCompetitionModelEvent(competition);
-        }
-
-    }
-
-    private void fireAddSportsmanToTeam(Sportsman newSportsman, Team team) {
-        for (SystemEventsListener l : listeners) {
-            l.addSportsmanToTeamModelEvent(newSportsman, team);
-        }
-
-    }
-
-    private void fireDetermineTheWinnersInOlympicGamesEvent(String[] winners) {
-        for (SystemEventsListener l : listeners) {
-            l.determineTheWinnersInOlympicGamesModelEvent(winners);
-        }
-
     }
 
     private void fireCreateTeamCompetitionEvent(Competition<Team> competition) {

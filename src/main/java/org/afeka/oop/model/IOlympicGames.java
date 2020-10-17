@@ -2,6 +2,7 @@ package org.afeka.oop.model;
 
 import org.afeka.oop.listeners.SystemEventsListener;
 
+import java.util.Date;
 import java.util.List;
 
 public interface IOlympicGames {
@@ -20,8 +21,6 @@ public interface IOlympicGames {
 
     String[] getWinners();
 
-    SPORT_TYPE getSportType();
-
     void registerListener(SystemEventsListener systemController);
 
     void createTeamCompetition(Competition<Team> newCompetition) throws Exception;
@@ -36,7 +35,7 @@ public interface IOlympicGames {
 
     void createTeam(Team newTeam) throws Exception;
 
-    void determineTheWinnersInOlympicGames() throws Exception;
+    void determineTheWinnersInOlympicGames(Date startDate, Date endDate) throws Exception;
 
     void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception;
 

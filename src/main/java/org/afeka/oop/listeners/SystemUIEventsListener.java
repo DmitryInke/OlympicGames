@@ -17,13 +17,11 @@ public interface SystemUIEventsListener {
 
     List<Team> getAllTeams();
 
-    SPORT_TYPE getSportType();
-
     void showAllDataViewEvent();
 
-    void createCountryViewEvent(Country country);
+    void createCountryViewEvent(String name);
 
-    void createStadiumViewEvent(Stadium stadium);
+    void createStadiumViewEvent(String name, String address, String capacity);
 
     void createTeamViewEvent(Team team);
 

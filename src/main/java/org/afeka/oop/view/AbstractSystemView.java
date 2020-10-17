@@ -15,18 +15,6 @@ public interface AbstractSystemView {
 
     void createTeamViewEvent(Team team);
 
-    void addSportsmanToTeamViewEvent(Sportsman newSportsman, Team team);
-
-    void addDetermineTheWinnersInTeamCompetitionViewEvent(Competition<Team> competition);
-
-    void addDetermineTheWinnersInSingleCompetitionViewEvent(Competition<Sportsman> competition);
-
-    void determineTheWinnersInOlympicGamesViewEvent(String[] winners);
-
-    void addTeamToCompetitionViewEvent(Team team, Competition<Team> competition);
-
-    void addSportsmanToCompetitionViewEvent(Sportsman sportsman, Competition<Sportsman> competition);
-
     void createTeamCompetitionViewEvent(Competition<Team> competition);
 
     void createSingleCompetitionViewEvent(Competition<Sportsman> competition);
