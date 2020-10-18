@@ -9,7 +9,9 @@ public interface AbstractSystemView {
 
     void createCountryViewEvent(Country country);
 
-    void createPersonViewEvent(Person person);
+    void createSportsmanViewEvent(Sportsman sportsman);
+
+    void createRefereeViewEvent(Referee referee);
 
     void createStadiumViewEvent(Stadium stadium);
 

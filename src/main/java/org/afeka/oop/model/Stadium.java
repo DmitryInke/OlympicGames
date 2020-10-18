@@ -27,12 +27,12 @@ public class Stadium {
         if (!(other instanceof Stadium))
             return false;
         Stadium temp = (Stadium) other;
-        return name.equalsIgnoreCase(temp.name) && address.equalsIgnoreCase(temp.address);
+        return name.equalsIgnoreCase(temp.name) || address.equalsIgnoreCase(temp.address);
     }
 
     @Override
     public String toString() {
-        return "Stadium " + name + ", address: " + address + ", capacity: " + capacity +"";
+        return "Stadium " + name + ", address: " + address + ", capacity: " + capacity + "";
     }
 
 }

@@ -87,33 +87,6 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void showAllDataViewEvent() {
-        for (Competition<Team> competition : systemModel.getAllTeamsInCompetition()) {
-            systemView.createTeamCompetitionViewEvent(competition);
-        }
-
-        for (Competition<Sportsman> competition : systemModel.getAllSportsmansInCompetition()) {
-            systemView.createSingleCompetitionViewEvent(competition);
-        }
-
-        for (Country country : systemModel.getAllCountries()) {
-            systemView.createCountryViewEvent(country);
-        }
-
-        for (Stadium stadium : systemModel.getAllStadiums()) {
-            systemView.createStadiumViewEvent(stadium);
-        }
-
-        for (Person person : systemModel.getAllPersons()) {
-            systemView.createPersonViewEvent(person);
-        }
-
-        for (Team team : systemModel.getAllTeams()) {
-            systemView.createTeamViewEvent(team);
-        }
-    }
-
-    @Override
     public void createCountryViewEvent(String name) {
         if (name.startsWith(" ") || name.isEmpty()) {
             systemView.exceptionMessage("You must enter a name");
@@ -141,7 +114,7 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
             systemView.exceptionMessage("You must enter an address");
         } else if (Integer.parseInt(capacity) > 0) {
             try {
-                systemModel.createStadium(new Stadium(name, address,Integer.parseInt(capacity)));
+                systemModel.createStadium(new Stadium(name, address, Integer.parseInt(capacity)));
                 systemView.successfulMessage("Stadium are successfully added to the storage");
             } catch (Exception e) {
                 systemView.exceptionMessage(e.getMessage());
@@ -159,9 +132,25 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void createPersonViewEvent(Person person) {
-        // TODO Auto-generated method stub
-
+    public void createPersonViewEvent(String name, Country country, Person typeOfPerson, SPORT_TYPE sportType) {
+        if (name.startsWith(" ") || name.isEmpty()) {
+            systemView.exceptionMessage("You must enter a name");
+        } else if (country == null) {
+            systemView.exceptionMessage("You must select a country");
+        } else {
+            try {
+                if (typeOfPerson instanceof Sportsman) {
+                    systemModel.createPerson(new Sportsman(name, country, sportType));
+                    systemView.successfulMessage("Sportsman is successfully added to the storage");
+                } else if (typeOfPerson instanceof Referee) {
+                    systemModel.createPerson(new Referee(name, country, sportType));
+                    systemView.successfulMessage("Referee is successfully added to the storage");
+                }
+                systemView.exceptionMessage("ZAIN");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
     }
 
     @Override

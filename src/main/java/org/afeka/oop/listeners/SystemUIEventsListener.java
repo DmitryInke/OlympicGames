@@ -17,15 +17,15 @@ public interface SystemUIEventsListener {
 
     List<Team> getAllTeams();
 
-    void showAllDataViewEvent();
-
     void createCountryViewEvent(String name);
 
     void createStadiumViewEvent(String name, String address, String capacity);
 
     void createTeamViewEvent(Team team);
 
-    void createPersonViewEvent(Person person);
+    void createSportsmanViewEvent(String name, Country country, Sportsman sportsman, SPORT_TYPE sportType);
+
+    void createRefereeViewEvent(String name, Country country, Referee referee, SPORT_TYPE sportType);
 
     void createTeamCompetitionViewEvent(Competition<Team> competition);
 

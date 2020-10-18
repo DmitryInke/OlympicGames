@@ -1,7 +1,6 @@
 package org.afeka.oop.view;
 
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -55,7 +54,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private VBox vbPerson = new VBox();
     private GridPane gpPerson = new GridPane();
     private Button btnCreatePerson = new Button("Create Person");
-    private RadioButton rdoCreateSportsman= new RadioButton("Sportsman");
+    private RadioButton rdoCreateSportsman = new RadioButton("Sportsman");
     private RadioButton rdoCreateReferee = new RadioButton("Referee");
     private ToggleGroup tglCreatePerson = new ToggleGroup();
     private Label lblNamePerson = new Label("Name");
@@ -67,7 +66,6 @@ public class SystemJavaFX implements AbstractSystemView {
     private RadioButton rdoPersonTypeRunner = new RadioButton("Runner");
     private RadioButton rdoPersonTypeJumping = new RadioButton("Jumper");
     private RadioButton rdoPersonTypeBoth = new RadioButton("Both");
-
 
 
     private VBox vbTeam = new VBox();
@@ -89,7 +87,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private Button btnChooseAddSportsmanToTeam = new Button("Add sportsman to team");
     private Label lblListSportsman = new Label("Sportsman");
     private Label lblListTeam = new Label("Team");
-    private ComboBox<Sportsman> cmbListSportsman = new ComboBox<Sportsman>();
+    private ComboBox<Person> cmbListSportsman = new ComboBox<Person>();
     private ComboBox<Team> cmbListTeam = new ComboBox<Team>();
 
     private VBox vbCompetition = new VBox();
@@ -108,7 +106,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private Label lblCompetitionStadium = new Label("Stadium");
     private Label lblCompetitionReferee = new Label("Referee");
     private ComboBox<Stadium> cmbCompetitionStadiums = new ComboBox<Stadium>();
-    private ComboBox<Referee> cmbCompetitionReferee = new ComboBox<Referee>();
+    private ComboBox<Person> cmbCompetitionReferee = new ComboBox<Person>();
     private ToggleGroup tglCompetitionType = new ToggleGroup();
     private RadioButton rdoCompetitionTypeRunner = new RadioButton("Runner");
     private RadioButton rdoCompetitionTypeJumping = new RadioButton("Jumper");
@@ -125,7 +123,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private Label lblAllTeams = new Label("Teams");
     private ComboBox<Competition<Team>> cmbTeamCompetitions = new ComboBox<Competition<Team>>();
     private ComboBox<Competition<Sportsman>> cmbSingleCompetitions = new ComboBox<Competition<Sportsman>>();
-    private ComboBox<Sportsman> cmbAllSportsmans = new ComboBox<Sportsman>();
+    private ComboBox<Person> cmbAllSportsmans = new ComboBox<Person>();
     private ComboBox<Team> cmbAllTeams = new ComboBox<Team>();
 
     private VBox vbOlympicGames = new VBox();
@@ -139,6 +137,9 @@ public class SystemJavaFX implements AbstractSystemView {
     private DatePicker dpEndDate = new DatePicker();
     private Button btnDetermineWinners = new Button("Determine Winners in Olympic Games");
 
+    private SPORT_TYPE otherSportType;
+    private Sportsman Sportsman;
+    private Referee Referee;
 
     public SystemJavaFX(Stage theStage) {
         theStage.setTitle("Olympic Games");
@@ -177,17 +178,17 @@ public class SystemJavaFX implements AbstractSystemView {
         rdoCreateReferee.setToggleGroup(tglCreatePerson);
         tglCreatePerson.selectToggle(rdoCreateSportsman);
 
-        gpPerson.add(rdoCreateSportsman, 0,0);
+        gpPerson.add(rdoCreateSportsman, 0, 0);
         gpPerson.add(rdoCreateReferee, 1, 0);
-        gpPerson.add(lblNamePerson, 0,1);
-        gpPerson.add(tfNamePerson, 1,1);
-        gpPerson.add(lblCountryPerson, 0,2);
-        gpPerson.add(cmbAllPersonCountry, 1,2);
-        gpPerson.add(lblSportTypePerson,0,3);
-        gpPerson.add(rdoPersonTypeRunner,1,3);
-        gpPerson.add(rdoPersonTypeJumping,1,4);
-        gpPerson.add(rdoPersonTypeBoth,1,5);
-        gpPerson.add(btnCreatePerson,0,6);
+        gpPerson.add(lblNamePerson, 0, 1);
+        gpPerson.add(tfNamePerson, 1, 1);
+        gpPerson.add(lblCountryPerson, 0, 2);
+        gpPerson.add(cmbAllPersonCountry, 1, 2);
+        gpPerson.add(lblSportTypePerson, 0, 3);
+        gpPerson.add(rdoPersonTypeRunner, 1, 3);
+        gpPerson.add(rdoPersonTypeJumping, 1, 4);
+        gpPerson.add(rdoPersonTypeBoth, 1, 5);
+        gpPerson.add(btnCreatePerson, 0, 6);
         gpPerson.setVgap(10);
         gpPerson.setHgap(10);
         vbPerson.getChildren().add(gpPerson);
@@ -205,7 +206,7 @@ public class SystemJavaFX implements AbstractSystemView {
         rdoTeamTypeJumping.setToggleGroup(tglTeamType);
         tglTeamType.selectToggle(rdoTeamTypeRunner);
 
-        vbCreateTeam.getChildren().addAll(lblTypeOfTeam, rdoTeamTypeRunner,rdoTeamTypeJumping, lblTeamCountry, cmbTeamCountry, btnCreateTeam);
+        vbCreateTeam.getChildren().addAll(lblTypeOfTeam, rdoTeamTypeRunner, rdoTeamTypeJumping, lblTeamCountry, cmbTeamCountry, btnCreateTeam);
         vbCreateTeam.setSpacing(10);
         vbCreateTeam.setVisible(false);
         vbAddSportsmanToTeam.getChildren().addAll(lblListSportsman, cmbListSportsman, lblListTeam, cmbListTeam, btnAddToTeam);
@@ -246,7 +247,7 @@ public class SystemJavaFX implements AbstractSystemView {
         rdoCompetitionTypeRunner.setToggleGroup(tglCompetitionType);
         tglCompetitionType.selectToggle(rdoCompetitionTypeRunner);
 
-        vbCreateCompetition.getChildren().addAll(rdoSingleComp, rdoTeamComp, lblCompetitionSportType, rdoCompetitionTypeRunner,rdoCompetitionTypeJumping, lblCompetitionStadium, cmbCompetitionStadiums, lblCompetitionReferee, cmbCompetitionReferee, btnCreateCompetition);
+        vbCreateCompetition.getChildren().addAll(rdoSingleComp, rdoTeamComp, lblCompetitionSportType, rdoCompetitionTypeRunner, rdoCompetitionTypeJumping, lblCompetitionStadium, cmbCompetitionStadiums, lblCompetitionReferee, cmbCompetitionReferee, btnCreateCompetition);
         vbCreateCompetition.setSpacing(10);
         vbCreateCompetition.setVisible(false);
         gpHoldCompetition.add(rdoSportsman, 0, 0);
@@ -302,7 +303,6 @@ public class SystemJavaFX implements AbstractSystemView {
         vbOlympicGames.setPadding(new Insets(20));
 
 
-
         btnChooseCreateTeam.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent action) {
@@ -335,19 +335,12 @@ public class SystemJavaFX implements AbstractSystemView {
             }
         });
 
-        tab1.setOnSelectionChanged(new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-                showAllData();
-            }
-        });
-
         btnCreateCountry.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent action) {
-                    for (SystemUIEventsListener l : allListeners)
-                        l.createCountryViewEvent(tfNameCountry.getText());
-                        tfNameCountry.clear();
+                for (SystemUIEventsListener l : allListeners)
+                    l.createCountryViewEvent(tfNameCountry.getText());
+                tfNameCountry.clear();
             }
         });
 
@@ -359,6 +352,29 @@ public class SystemJavaFX implements AbstractSystemView {
                 tfNameStadium.clear();
                 tfAddressStadium.clear();
                 tfCapacityStadium.clear();
+            }
+        });
+
+        btnCreatePerson.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent action) {
+
+
+                if (tglPersonSportType.getSelectedToggle().equals(rdoPersonTypeRunner)) {
+                    otherSportType = SPORT_TYPE.RUNNING;
+                } else if (tglPersonSportType.getSelectedToggle().equals(rdoPersonTypeJumping)) {
+                    otherSportType = SPORT_TYPE.JUMPING;
+                } else {
+                    otherSportType = SPORT_TYPE.BOTH;
+                }
+                for (SystemUIEventsListener l : allListeners) {
+                    if (tglCreatePerson.getSelectedToggle().equals(rdoCreateSportsman)) {
+                        l.createSportsmanViewEvent(tfNamePerson.getText(), cmbAllPersonCountry.getValue(), Sportsman, otherSportType);
+                    } else {
+                        l.createRefereeViewEvent(tfNamePerson.getText(), cmbAllPersonCountry.getValue(), Referee, otherSportType);
+                    }
+                }
+                tfNamePerson.clear();
             }
         });
 
@@ -383,25 +399,6 @@ public class SystemJavaFX implements AbstractSystemView {
         allListeners.add(newListener);
     }
 
-    public void showAllData() {
-        cmbAllCountry.getItems().clear();
-        cmbALlStadiums.getItems().clear();
-        cmbAllPersonCountry.getItems().clear();
-        cmbTeamCountry.getItems().clear();
-        cmbListSportsman.getItems().clear();
-        cmbListTeam.getItems().clear();
-        cmbAllSportsmans.getItems().clear();
-        cmbCompetitionStadiums.getItems().clear();
-        cmbCompetitionReferee.getItems().clear();
-        cmbTeamCompetitions.getItems().clear();
-        cmbSingleCompetitions.getItems().clear();
-        cmbAllTeams.getItems().clear();
-
-        for (SystemUIEventsListener l : allListeners)
-            l.showAllDataViewEvent();
-    }
-
-
     @Override
     public void createCountryViewEvent(Country country) {
         cmbAllCountry.getItems().add(country);
@@ -411,15 +408,17 @@ public class SystemJavaFX implements AbstractSystemView {
     }
 
     @Override
-    public void createPersonViewEvent(Person person) {
-        if (person instanceof Sportsman) {
-            cmbListSportsman.getItems().add((Sportsman) person);
-            cmbAllSportsmans.getItems().add((Sportsman) person);
-        }
-        else{
-            cmbCompetitionReferee.getItems().add((Referee) person);
-        }
+    public void createSportsmanViewEvent(Sportsman sportsman) {
+        cmbListSportsman.getItems().add(sportsman);
+        cmbAllSportsmans.getItems().add(sportsman);
     }
+
+
+    @Override
+    public void createRefereeViewEvent(Referee referee) {
+        cmbCompetitionReferee.getItems().add(referee);
+    }
+
 
     @Override
     public void createStadiumViewEvent(Stadium stadium) {
