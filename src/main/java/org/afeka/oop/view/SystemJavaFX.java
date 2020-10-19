@@ -358,8 +358,6 @@ public class SystemJavaFX implements AbstractSystemView {
         btnCreatePerson.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent action) {
-
-
                 if (tglPersonSportType.getSelectedToggle().equals(rdoPersonTypeRunner)) {
                     otherSportType = SPORT_TYPE.RUNNING;
                 } else if (tglPersonSportType.getSelectedToggle().equals(rdoPersonTypeJumping)) {

@@ -3,22 +3,8 @@ package org.afeka.oop.model;
 import org.afeka.oop.listeners.SystemEventsListener;
 
 import java.util.Date;
-import java.util.List;
 
 public interface IOlympicGames {
-
-    List<Competition<Team>> getAllTeamsInCompetition();
-
-    List<Competition<Sportsman>> getAllSportsmansInCompetition();
-
-    List<Country> getAllCountries();
-
-    List<Stadium> getAllStadiums();
-
-    List<Person> getAllPersons();
-
-    List<Team> getAllTeams();
-
     String[] getWinners();
 
     void registerListener(SystemEventsListener systemController);
@@ -31,7 +17,9 @@ public interface IOlympicGames {
 
     void createStadium(Stadium newStadium) throws Exception;
 
-    void createPerson(Person newPerson) throws Exception;
+    void createSportsman(Sportsman newSportsman) throws Exception;
+
+    void createReferee(Referee newReferee) throws Exception;
 
     void createTeam(Team newTeam) throws Exception;
 

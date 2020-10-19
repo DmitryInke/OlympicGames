@@ -6,7 +6,9 @@ public interface SystemEventsListener {
 
     void createCountryModelEvent(Country country);
 
-    void createPersonModelEvent(Person person);
+    void createSportsmanModelEvent(Sportsman newSportsman);
+
+    void createRefereeModelEvent(Referee newReferee);
 
     void createStadiumModelEvent(Stadium stadium);
 

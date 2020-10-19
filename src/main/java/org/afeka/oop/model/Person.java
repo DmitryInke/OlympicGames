@@ -28,11 +28,11 @@ public abstract class Person {
             return false;
 
         Person temp = (Person) other;
-        return name == temp.name && sportType.equals(temp.sportType) && country.equals(temp.country);
+        return name.equalsIgnoreCase(temp.name )&& sportType.equals(temp.sportType) && country.equals(temp.country);
     }
 
     @Override
     public String toString() {
-        return "Person [name=" + name + ", sportType=" + sportType + ", country=" + country.getName() + "]";
+        return "" + name+ ", country: " + country.getName() + ", sport type: " +(sportType);
     }
 }

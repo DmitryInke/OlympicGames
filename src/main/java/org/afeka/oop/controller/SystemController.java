@@ -5,8 +5,6 @@ import org.afeka.oop.listeners.SystemUIEventsListener;
 import org.afeka.oop.model.*;
 import org.afeka.oop.view.AbstractSystemView;
 
-import java.util.List;
-
 public class SystemController implements SystemUIEventsListener, SystemEventsListener {
 
     private IOlympicGames systemModel;
@@ -27,8 +25,14 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void createPersonModelEvent(Person person) {
-        systemView.createPersonViewEvent(person);
+    public void createSportsmanModelEvent(Sportsman newSportsman) {
+        systemView.createSportsmanViewEvent(newSportsman);
+
+    }
+
+    @Override
+    public void createRefereeModelEvent(Referee newReferee) {
+        systemView.createRefereeViewEvent(newReferee);
 
     }
 
@@ -54,36 +58,6 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     public void createSingleCompetitionModelEvent(Competition<Sportsman> competition) {
         systemView.createSingleCompetitionViewEvent(competition);
 
-    }
-
-    @Override
-    public List<Competition<Team>> getAllTeamsInCompetition() {
-        return systemModel.getAllTeamsInCompetition();
-    }
-
-    @Override
-    public List<Competition<Sportsman>> getAllSportsmansInCompetition() {
-        return systemModel.getAllSportsmansInCompetition();
-    }
-
-    @Override
-    public List<Country> getAllCountries() {
-        return systemModel.getAllCountries();
-    }
-
-    @Override
-    public List<Stadium> getAllStadiums() {
-        return systemModel.getAllStadiums();
-    }
-
-    @Override
-    public List<Person> getAllPersons() {
-        return systemModel.getAllPersons();
-    }
-
-    @Override
-    public List<Team> getAllTeams() {
-        return systemModel.getAllTeams();
     }
 
     @Override
@@ -132,21 +106,31 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void createPersonViewEvent(String name, Country country, Person typeOfPerson, SPORT_TYPE sportType) {
+    public void createRefereeViewEvent(String name, Country country, Referee referee, SPORT_TYPE sportType) {
         if (name.startsWith(" ") || name.isEmpty()) {
             systemView.exceptionMessage("You must enter a name");
         } else if (country == null) {
             systemView.exceptionMessage("You must select a country");
         } else {
             try {
-                if (typeOfPerson instanceof Sportsman) {
-                    systemModel.createPerson(new Sportsman(name, country, sportType));
-                    systemView.successfulMessage("Sportsman is successfully added to the storage");
-                } else if (typeOfPerson instanceof Referee) {
-                    systemModel.createPerson(new Referee(name, country, sportType));
-                    systemView.successfulMessage("Referee is successfully added to the storage");
-                }
-                systemView.exceptionMessage("ZAIN");
+                systemModel.createReferee(new Referee(name, country, sportType));
+                systemView.successfulMessage("Referee is successfully added to the storage");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void createSportsmanViewEvent(String name, Country country, Sportsman sportsman, SPORT_TYPE sportType) {
+        if (name.startsWith(" ") || name.isEmpty()) {
+            systemView.exceptionMessage("You must enter a name");
+        } else if (country == null) {
+            systemView.exceptionMessage("You must select a country");
+        } else {
+            try {
+                systemModel.createSportsman(new Sportsman(name, country, sportType));
+                systemView.successfulMessage("Sportsman is successfully added to the storage");
             } catch (Exception e) {
                 systemView.exceptionMessage(e.getMessage());
             }

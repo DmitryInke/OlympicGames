@@ -2,20 +2,7 @@ package org.afeka.oop.listeners;
 
 import org.afeka.oop.model.*;
 
-import java.util.List;
-
 public interface SystemUIEventsListener {
-    List<Competition<Team>> getAllTeamsInCompetition();
-
-    List<Competition<Sportsman>> getAllSportsmansInCompetition();
-
-    List<Country> getAllCountries();
-
-    List<Stadium> getAllStadiums();
-
-    List<Person> getAllPersons();
-
-    List<Team> getAllTeams();
 
     void createCountryViewEvent(String name);
 

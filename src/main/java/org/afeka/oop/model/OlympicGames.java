@@ -16,7 +16,8 @@ public class OlympicGames implements IOlympicGames {
     private List<Competition<Sportsman>> allSportsmansInCompetition;
     private List<Country> allCountries;
     private List<Stadium> allStadiums;
-    private List<Person> allPersons;
+    private List<Sportsman> allSportsmans;
+    private List<Referee> allReferee;
     private List<Team> allTeams;
     private String[] winners;
     private ArrayList<SystemEventsListener> listeners;
@@ -26,38 +27,15 @@ public class OlympicGames implements IOlympicGames {
         this.allSportsmansInCompetition = new ArrayList<Competition<Sportsman>>();
         this.allCountries = new ArrayList<Country>();
         this.allStadiums = new ArrayList<Stadium>();
-        this.allPersons = new ArrayList<Person>();
+        this.allSportsmans = new ArrayList<Sportsman>();
+        this.allReferee = new ArrayList<Referee>();
         this.allTeams = new ArrayList<Team>();
         this.winners = new String[3];
         this.listeners = new ArrayList<SystemEventsListener>();
     }
 
-    public List<Competition<Team>> getAllTeamsInCompetition() {
-        return allTeamsInCompetition;
-    }
-
-    public List<Competition<Sportsman>> getAllSportsmansInCompetition() {
-        return allSportsmansInCompetition;
-    }
-
     public void registerListener(SystemEventsListener listener) {
         listeners.add(listener);
-    }
-
-    public List<Country> getAllCountries() {
-        return allCountries;
-    }
-
-    public List<Stadium> getAllStadiums() {
-        return allStadiums;
-    }
-
-    public List<Person> getAllPersons() {
-        return allPersons;
-    }
-
-    public List<Team> getAllTeams() {
-        return allTeams;
     }
 
     public String[] getWinners() {
@@ -105,14 +83,24 @@ public class OlympicGames implements IOlympicGames {
         fireCreateStadiumEvent(newStadium);
     }
 
-    public void createPerson(Person newPerson) throws Exception {
-        for (int i = 0; i < allPersons.size(); i++) {
-            if (allPersons.get(i).equals(newPerson)) {
-                throw new Exception("This person already exists");
+    public void createSportsman(Sportsman newSportsman) throws Exception {
+        for (int i = 0; i < allSportsmans.size(); i++) {
+            if (allSportsmans.get(i).equals(newSportsman)) {
+                throw new Exception("This sportsman already exists");
             }
         }
-        allPersons.add(newPerson);
-        fireCreatePersonEvent(newPerson);
+        allSportsmans.add(newSportsman);
+        fireCreateSportsmanEvent(newSportsman);
+    }
+
+    public void createReferee(Referee newReferee) throws Exception {
+        for (int i = 0; i < allReferee.size(); i++) {
+            if (allReferee.get(i).equals(newReferee)) {
+                throw new Exception("This referee already exists");
+            }
+        }
+        allReferee.add(newReferee);
+        fireCreateRefereeEvent(newReferee);
     }
 
     public void createTeam(Team newTeam) throws Exception {
@@ -191,11 +179,16 @@ public class OlympicGames implements IOlympicGames {
 
     }
 
-    private void fireCreatePersonEvent(Person newPerson) {
+    private void fireCreateSportsmanEvent(Sportsman newSportsman) {
         for (SystemEventsListener l : listeners) {
-            l.createPersonModelEvent(newPerson);
+            l.createSportsmanModelEvent(newSportsman);
         }
+    }
 
+    private void fireCreateRefereeEvent(Referee newReferee) {
+        for (SystemEventsListener l : listeners) {
+            l.createRefereeModelEvent(newReferee);
+        }
     }
 
     private void fireCreateStadiumEvent(Stadium newStadium) {
