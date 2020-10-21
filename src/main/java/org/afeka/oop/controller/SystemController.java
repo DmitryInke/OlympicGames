@@ -100,8 +100,17 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
 
 
     @Override
-    public void createTeamViewEvent(Team team) {
-        // TODO Auto-generated method stub
+    public void createTeamViewEvent(Country country, SPORT_TYPE sportType) {
+        if (country == null) {
+            systemView.exceptionMessage("You must select a country");
+        } else {
+            try {
+                systemModel.createTeam(new Team(sportType, country));
+                systemView.successfulMessage("Team are successfully added to the storage");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
 
     }
 
@@ -138,14 +147,36 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void createTeamCompetitionViewEvent(Competition<Team> competition) {
-        // TODO Auto-generated method stub
+    public void createTeamCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee, Class<Team> clazz) {
+        if (stadium == null || referee == null) {
+            systemView.exceptionMessage("Invalid credentials");
+        } else if (!(referee.getSportType() == SPORT_TYPE.BOTH || sportType.equals(referee.getSportType()))) {
+            systemView.exceptionMessage("The type needs to match");
+        } else {
+            try {
+                systemModel.createTeamCompetition(new Competition<Team>(sportType, stadium, referee, clazz));
+                systemView.successfulMessage("Team competition are successfully added to the storage");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
 
     }
 
     @Override
-    public void createSingleCompetitionViewEvent(Competition<Sportsman> competition) {
-        // TODO Auto-generated method stub
+    public void createSingleCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee, Class<Sportsman> clazz) {
+        if (stadium == null || referee == null) {
+            systemView.exceptionMessage("Invalid credentials");
+        } else if (!(referee.getSportType() == SPORT_TYPE.BOTH || sportType.equals(referee.getSportType()))) {
+            systemView.exceptionMessage("The type needs to match");
+        } else {
+            try {
+                systemModel.createSingleCompetition(new Competition<Sportsman>(sportType, stadium, referee, clazz));
+                systemView.successfulMessage("Single competition are successfully added to the storage");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
 
     }
 
@@ -163,8 +194,16 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
 
     @Override
     public void addSportsmanToTeamViewEvent(Sportsman newSportsman, Team team) {
-        // TODO Auto-generated method stub
-
+        if (newSportsman == null || team == null) {
+            systemView.exceptionMessage("Invalid credentials");
+        } else {
+            try {
+                systemModel.addSportsmanToTeam(newSportsman, team);
+                systemView.successfulMessage("Sportsman is successfully added to the team");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
     }
 
     @Override

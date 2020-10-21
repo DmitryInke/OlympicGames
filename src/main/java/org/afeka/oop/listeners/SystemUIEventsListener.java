@@ -8,15 +8,15 @@ public interface SystemUIEventsListener {
 
     void createStadiumViewEvent(String name, String address, String capacity);
 
-    void createTeamViewEvent(Team team);
+    void createTeamViewEvent(Country country, SPORT_TYPE sportType);
 
     void createSportsmanViewEvent(String name, Country country, Sportsman sportsman, SPORT_TYPE sportType);
 
     void createRefereeViewEvent(String name, Country country, Referee referee, SPORT_TYPE sportType);
 
-    void createTeamCompetitionViewEvent(Competition<Team> competition);
+    void createTeamCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee, Class<Team> clazz);
 
-    void createSingleCompetitionViewEvent(Competition<Sportsman> competition);
+    void createSingleCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee, Class<Sportsman> clazz);
 
     void determineTheWinnersInTeamCompetition(Competition<Team> competition);
 

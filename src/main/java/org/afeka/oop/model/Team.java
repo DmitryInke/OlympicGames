@@ -48,8 +48,7 @@ public class Team implements CompetitorsDetails {
 
     @Override
     public String toString() {
-        return "Team [sportType=" + sportType + ", allSportsmans=" + allSportsmans + ", country=" + country.getName()
-                + "]";
+        return "Team: " + country + " (" + sportType + ")";
     }
 
 }

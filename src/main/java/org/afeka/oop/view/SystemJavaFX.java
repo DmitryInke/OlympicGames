@@ -87,7 +87,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private Button btnChooseAddSportsmanToTeam = new Button("Add sportsman to team");
     private Label lblListSportsman = new Label("Sportsman");
     private Label lblListTeam = new Label("Team");
-    private ComboBox<Person> cmbListSportsman = new ComboBox<Person>();
+    private ComboBox<Sportsman> cmbListSportsman = new ComboBox<Sportsman>();
     private ComboBox<Team> cmbListTeam = new ComboBox<Team>();
 
     private VBox vbCompetition = new VBox();
@@ -106,7 +106,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private Label lblCompetitionStadium = new Label("Stadium");
     private Label lblCompetitionReferee = new Label("Referee");
     private ComboBox<Stadium> cmbCompetitionStadiums = new ComboBox<Stadium>();
-    private ComboBox<Person> cmbCompetitionReferee = new ComboBox<Person>();
+    private ComboBox<Referee> cmbCompetitionReferee = new ComboBox<Referee>();
     private ToggleGroup tglCompetitionType = new ToggleGroup();
     private RadioButton rdoCompetitionTypeRunner = new RadioButton("Runner");
     private RadioButton rdoCompetitionTypeJumping = new RadioButton("Jumper");
@@ -123,7 +123,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private Label lblAllTeams = new Label("Teams");
     private ComboBox<Competition<Team>> cmbTeamCompetitions = new ComboBox<Competition<Team>>();
     private ComboBox<Competition<Sportsman>> cmbSingleCompetitions = new ComboBox<Competition<Sportsman>>();
-    private ComboBox<Person> cmbAllSportsmans = new ComboBox<Person>();
+    private ComboBox<Sportsman> cmbAllSportsmans = new ComboBox<Sportsman>();
     private ComboBox<Team> cmbAllTeams = new ComboBox<Team>();
 
     private VBox vbOlympicGames = new VBox();
@@ -195,10 +195,10 @@ public class SystemJavaFX implements AbstractSystemView {
         vbPerson.setSpacing(30);
         vbPerson.setPadding(new Insets(20));
 
-        cmbListTeam.setMaxWidth(100);
-        cmbListTeam.setMinWidth(100);
-        cmbListSportsman.setMinWidth(100);
-        cmbListSportsman.setMaxWidth(100);
+        cmbListTeam.setMaxWidth(200);
+        cmbListTeam.setMinWidth(200);
+        cmbListSportsman.setMinWidth(200);
+        cmbListSportsman.setMaxWidth(200);
         cmbTeamCountry.setMaxWidth(100);
         cmbTeamCountry.setMinWidth(100);
 
@@ -220,10 +220,8 @@ public class SystemJavaFX implements AbstractSystemView {
         vbTeam.setSpacing(30);
         vbTeam.setPadding(new Insets(20));
 
-        cmbCompetitionStadiums.setMaxWidth(100);
-        cmbCompetitionStadiums.setMinWidth(100);
-        cmbListSportsman.setMinWidth(100);
-        cmbListSportsman.setMaxWidth(100);
+        cmbCompetitionStadiums.setMaxWidth(200);
+        cmbCompetitionStadiums.setMinWidth(200);
         cmbTeamCompetitions.setMinWidth(100);
         cmbTeamCompetitions.setMaxWidth(100);
         cmbSingleCompetitions.setMinWidth(100);
@@ -232,8 +230,8 @@ public class SystemJavaFX implements AbstractSystemView {
         cmbAllSportsmans.setMaxWidth(100);
         cmbAllTeams.setMinWidth(100);
         cmbAllTeams.setMaxWidth(100);
-        cmbCompetitionReferee.setMinWidth(100);
-        cmbCompetitionReferee.setMaxWidth(100);
+        cmbCompetitionReferee.setMinWidth(200);
+        cmbCompetitionReferee.setMaxWidth(200);
 
         rdoSingleComp.setToggleGroup(tglCompetition);
         rdoTeamComp.setToggleGroup(tglCompetition);
@@ -376,6 +374,48 @@ public class SystemJavaFX implements AbstractSystemView {
             }
         });
 
+        btnCreateTeam.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent action) {
+                if (tglTeamType.getSelectedToggle().equals(rdoTeamTypeRunner)) {
+                    otherSportType = SPORT_TYPE.RUNNING;
+                } else {
+                    otherSportType = SPORT_TYPE.JUMPING;
+                }
+                for (SystemUIEventsListener l : allListeners) {
+                    l.createTeamViewEvent(cmbTeamCountry.getValue(), otherSportType);
+                }
+            }
+        });
+
+        btnAddToTeam.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent action) {
+                for (SystemUIEventsListener l : allListeners) {
+                    l.addSportsmanToTeamViewEvent(cmbListSportsman.getValue(), cmbListTeam.getValue());
+                }
+            }
+        });
+
+        btnCreateCompetition.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent action) {
+                if (tglCompetitionType.getSelectedToggle().equals(rdoCompetitionTypeRunner)) {
+                    otherSportType = SPORT_TYPE.RUNNING;
+                } else {
+                    otherSportType = SPORT_TYPE.JUMPING;
+                }
+                for (SystemUIEventsListener l : allListeners) {
+                    if (tglCompetition.getSelectedToggle().equals(rdoSingleComp)) {
+                        l.createSingleCompetitionViewEvent(otherSportType, cmbCompetitionStadiums.getValue(), cmbCompetitionReferee.getValue(), Sportsman.class);
+                    } else {
+                        l.createTeamCompetitionViewEvent(otherSportType, cmbCompetitionStadiums.getValue(), cmbCompetitionReferee.getValue(), Team.class);
+                    }
+                }
+            }
+        });
+
+
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tab1.setContent(vbCountry);
         tab2.setContent(vbStadium);
@@ -388,7 +428,7 @@ public class SystemJavaFX implements AbstractSystemView {
         scrollRoot.fitToHeightProperty().set(true);
         scrollRoot.fitToWidthProperty().set(true);
         scrollRoot.setContent(tabPane);
-        theStage.setScene(new Scene(scrollRoot, 700, 420));
+        theStage.setScene(new Scene(scrollRoot, 750, 420));
         theStage.show();
     }
 

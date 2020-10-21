@@ -12,6 +12,7 @@ public class Competition<T extends CompetitorsDetails> {
     private List<T> allCompetitors;
     private T[] winners;
     private Random rnd = new Random();
+    private int counterHoldCompetition;
     private Class<T> clazz;
 
     @SuppressWarnings("unchecked")
@@ -20,6 +21,7 @@ public class Competition<T extends CompetitorsDetails> {
         this.stadium = stadium;
         this.referee = referee;
         this.clazz = clazz;
+        this.counterHoldCompetition = 0;
         this.allCompetitors = new ArrayList<T>();
         this.winners = (T[]) Array.newInstance(clazz, 3);
     }
@@ -52,15 +54,19 @@ public class Competition<T extends CompetitorsDetails> {
     public void determineTheWinners() throws Exception {
         if (allCompetitors.size() < 3) {
             throw new Exception("It is impossible to hold a competition if there are less than 3 participants");
-        }
-        for (int i = 0; i < winners.length; i++) {
-            T a = allCompetitors.get(rnd.nextInt(allCompetitors.size()));
-            if (!winnersExists(a)) {
-                winners[i] = a;
-                a.getCountry().CalculateNumOfMedals(i);
-            } else {
-                i--;
+        } else if (counterHoldCompetition != 0) {
+            throw new Exception("It is impossible to hold a competition twice");
+        } else {
+            for (int i = 0; i < winners.length; i++) {
+                T a = allCompetitors.get(rnd.nextInt(allCompetitors.size()));
+                if (!winnersExists(a)) {
+                    winners[i] = a;
+                    a.getCountry().CalculateNumOfMedals(i);
+                } else {
+                    i--;
+                }
             }
+            counterHoldCompetition++;
         }
     }
 
@@ -79,6 +85,11 @@ public class Competition<T extends CompetitorsDetails> {
 
         Competition<?> temp = (Competition<?>) other;
         return this.clazz.equals(temp.clazz) && stadium.equals(temp.stadium) && referee.equals(temp.referee) && sportType.equals(temp.sportType);
+    }
+
+    @Override
+    public String toString() {
+        return (this.clazz.equals(Sportsman.class) ? "Single " : "Team ") + "Competition, sport type: " +sportType;
     }
 
 }
