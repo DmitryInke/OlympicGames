@@ -98,7 +98,6 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
         }
     }
 
-
     @Override
     public void createTeamViewEvent(Country country, SPORT_TYPE sportType) {
         if (country == null) {
@@ -147,7 +146,8 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void createTeamCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee, Class<Team> clazz) {
+    public void createTeamCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee,
+                                               Class<Team> clazz) {
         if (stadium == null || referee == null) {
             systemView.exceptionMessage("Invalid credentials");
         } else if (!(referee.getSportType() == SPORT_TYPE.BOTH || sportType.equals(referee.getSportType()))) {
@@ -164,7 +164,8 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void createSingleCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee, Class<Sportsman> clazz) {
+    public void createSingleCompetitionViewEvent(SPORT_TYPE sportType, Stadium stadium, Referee referee,
+                                                 Class<Sportsman> clazz) {
         if (stadium == null || referee == null) {
             systemView.exceptionMessage("Invalid credentials");
         } else if (!(referee.getSportType() == SPORT_TYPE.BOTH || sportType.equals(referee.getSportType()))) {
@@ -182,14 +183,31 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
 
     @Override
     public void determineTheWinnersInTeamCompetition(Competition<Team> competition) {
-        // TODO Auto-generated method stub
+        if (competition == null) {
+            systemView.exceptionMessage("You must select a team competition");
+        } else {
+            try {
+                systemModel.determineTheWinnersInTeamCompetition(competition);
+                systemView.successfulMessage("You hold a team competition");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
 
     }
 
     @Override
     public void determineTheWinnersInSingleCompetition(Competition<Sportsman> competition) {
-        // TODO Auto-generated method stub
-
+        if (competition == null) {
+            systemView.exceptionMessage("You must select a single competition");
+        } else {
+            try {
+                systemModel.determineTheWinnersInSingleCompetition(competition);
+                systemView.successfulMessage("You hold a single competition");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -208,13 +226,30 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
 
     @Override
     public void addTeamToCompetitionViewEvent(Team team, Competition<Team> competition) {
-        // TODO Auto-generated method stub
-
+        if (competition == null || team == null) {
+            systemView.exceptionMessage("Invalid credentials");
+        } else {
+            try {
+                systemModel.addTeamToCompetition(team, competition);
+                systemView.successfulMessage("Team is successfully added to the competition");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
     }
 
     @Override
     public void addSportsmanToCompetitionViewEvent(Sportsman sportsman, Competition<Sportsman> competition) {
-        // TODO Auto-generated method stub
+        if (competition == null || sportsman == null) {
+            systemView.exceptionMessage("Invalid credentials");
+        } else {
+            try {
+                systemModel.addSportsmanToCompetition(sportsman, competition);
+                systemView.successfulMessage("Sportsman is successfully added to the competition");
+            } catch (Exception e) {
+                systemView.exceptionMessage(e.getMessage());
+            }
+        }
 
     }
 

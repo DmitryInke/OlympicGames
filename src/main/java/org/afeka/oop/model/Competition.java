@@ -39,16 +39,13 @@ public class Competition<T extends CompetitorsDetails> {
     }
 
     public void addCompetitorsToCompetition(T a) throws Exception {
-        if (a.getSportType() != getSportType()) {
-            throw new Exception("This team is not fit in the competition");
-        } else {
-            for (int i = 0; i < allCompetitors.size(); i++) {
-                if (allCompetitors.get(i).equals(a)) {
-                    throw new Exception("This team already exists in competition");
-                }
-            }
+        if ((a.getSportType() == SPORT_TYPE.BOTH || getSportType().equals(a.getSportType()))
+                && !allCompetitors.contains(a)) {
             allCompetitors.add(a);
+        } else {
+            throw new Exception("This competitors is not fit in the competition");
         }
+
     }
 
     public void determineTheWinners() throws Exception {
@@ -84,12 +81,13 @@ public class Competition<T extends CompetitorsDetails> {
             return false;
 
         Competition<?> temp = (Competition<?>) other;
-        return this.clazz.equals(temp.clazz) && stadium.equals(temp.stadium) && referee.equals(temp.referee) && sportType.equals(temp.sportType);
+        return this.clazz.equals(temp.clazz) && stadium.equals(temp.stadium) && referee.equals(temp.referee)
+                && sportType.equals(temp.sportType);
     }
 
     @Override
     public String toString() {
-        return (this.clazz.equals(Sportsman.class) ? "Single " : "Team ") + "Competition, sport type: " +sportType;
+        return (this.clazz.equals(Sportsman.class) ? "Single " : "Team ") + "Competition, sport type: " + sportType;
     }
 
 }

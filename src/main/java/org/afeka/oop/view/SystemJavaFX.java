@@ -115,7 +115,7 @@ public class SystemJavaFX implements AbstractSystemView {
     private GridPane gpHoldCompetition = new GridPane();
     private Button btnCompetitionOptions = new Button("Competition Options");
     private ToggleGroup tglTypeCompetitors = new ToggleGroup();
-    private RadioButton rdoSportsman = new RadioButton("Sportsman");
+    private RadioButton rdoSingle = new RadioButton("Single");
     private RadioButton rdoTeam = new RadioButton("Team");
     private Label lblSingleCompetitions = new Label("Single competitions");
     private Label lblTeamCompetitions = new Label("Team competitions");
@@ -237,9 +237,9 @@ public class SystemJavaFX implements AbstractSystemView {
         rdoTeamComp.setToggleGroup(tglCompetition);
         tglCompetition.selectToggle(rdoSingleComp);
 
-        rdoSportsman.setToggleGroup(tglTypeCompetitors);
+        rdoSingle.setToggleGroup(tglTypeCompetitors);
         rdoTeam.setToggleGroup(tglTypeCompetitors);
-        tglTypeCompetitors.selectToggle(rdoSportsman);
+        tglTypeCompetitors.selectToggle(rdoSingle);
 
         rdoCompetitionTypeJumping.setToggleGroup(tglCompetitionType);
         rdoCompetitionTypeRunner.setToggleGroup(tglCompetitionType);
@@ -248,7 +248,7 @@ public class SystemJavaFX implements AbstractSystemView {
         vbCreateCompetition.getChildren().addAll(rdoSingleComp, rdoTeamComp, lblCompetitionSportType, rdoCompetitionTypeRunner, rdoCompetitionTypeJumping, lblCompetitionStadium, cmbCompetitionStadiums, lblCompetitionReferee, cmbCompetitionReferee, btnCreateCompetition);
         vbCreateCompetition.setSpacing(10);
         vbCreateCompetition.setVisible(false);
-        gpHoldCompetition.add(rdoSportsman, 0, 0);
+        gpHoldCompetition.add(rdoSingle, 0, 0);
         gpHoldCompetition.add(lblAllSportsmans, 1, 0);
         gpHoldCompetition.add(cmbAllSportsmans, 2, 0);
         gpHoldCompetition.add(lblSingleCompetitions, 1, 1);
@@ -410,6 +410,32 @@ public class SystemJavaFX implements AbstractSystemView {
                         l.createSingleCompetitionViewEvent(otherSportType, cmbCompetitionStadiums.getValue(), cmbCompetitionReferee.getValue(), Sportsman.class);
                     } else {
                         l.createTeamCompetitionViewEvent(otherSportType, cmbCompetitionStadiums.getValue(), cmbCompetitionReferee.getValue(), Team.class);
+                    }
+                }
+            }
+        });
+
+        btnAddCompetitorsToCompetition.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent action) {
+                for (SystemUIEventsListener l : allListeners) {
+                    if (tglTypeCompetitors.getSelectedToggle().equals(rdoSingle)) {
+                        l.addSportsmanToCompetitionViewEvent(cmbAllSportsmans.getValue(), cmbSingleCompetitions.getValue());
+                    } else {
+                        l.addTeamToCompetitionViewEvent(cmbAllTeams.getValue(), cmbTeamCompetitions.getValue());
+                    }
+                }
+            }
+        });
+
+        btnHoldCompetition.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent action) {
+                for (SystemUIEventsListener l : allListeners) {
+                    if (tglTypeCompetitors.getSelectedToggle().equals(rdoSingle)) {
+                        l.determineTheWinnersInSingleCompetition(cmbSingleCompetitions.getValue());
+                    } else {
+                        l.determineTheWinnersInTeamCompetition(cmbTeamCompetitions.getValue());
                     }
                 }
             }
