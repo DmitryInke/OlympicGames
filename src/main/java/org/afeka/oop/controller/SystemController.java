@@ -262,7 +262,7 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
         }else{
             try{
                 systemModel.determineTheWinnersInOlympicGames(startDate, endDate);
-                systemView.successfulMessage("1: " + systemModel.getWinners()[0] + "\n 2: " + systemModel.getWinners()[1] + "\n 3: " + systemModel.getWinners()[2] +"\n We will see you in four years");
+                systemView.successfulMessage("1: " + systemModel.getWinners()[0] + "\n2: " + systemModel.getWinners()[1] + "\n3: " + systemModel.getWinners()[2] +"\n We will see you in four years");
             }catch (Exception e){
                 systemView.exceptionMessage(e.getMessage());
             }
