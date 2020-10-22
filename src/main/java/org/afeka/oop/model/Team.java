@@ -35,7 +35,7 @@ public class Team implements CompetitorsDetails {
                 && newSportsman.getCountry() == getCountry() && !allSportsmans.contains(newSportsman)) {
             allSportsmans.add(newSportsman);
         } else {
-            throw new Exception("This sportsman is not fit in the team");
+            throw new Exception("Failed to add because it already exists/invalid credentials");
         }
     }
 

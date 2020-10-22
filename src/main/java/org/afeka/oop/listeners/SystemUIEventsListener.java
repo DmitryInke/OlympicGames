@@ -2,6 +2,8 @@ package org.afeka.oop.listeners;
 
 import org.afeka.oop.model.*;
 
+import java.time.LocalDate;
+
 public interface SystemUIEventsListener {
 
     void createCountryViewEvent(String name);
@@ -27,6 +29,8 @@ public interface SystemUIEventsListener {
     void addTeamToCompetitionViewEvent(Team team, Competition<Team> competition);
 
     void addSportsmanToCompetitionViewEvent(Sportsman sportsman, Competition<Sportsman> competition);
+
+    void determineTheWinnersInOlympicGames(LocalDate startDate, LocalDate endDate);
 
 
 }

@@ -43,7 +43,7 @@ public class Competition<T extends CompetitorsDetails> {
                 && !allCompetitors.contains(a)) {
             allCompetitors.add(a);
         } else {
-            throw new Exception("This competitors is not fit in the competition");
+            throw new Exception("Failed to add because it already exists/invalid credentials");
         }
 
     }

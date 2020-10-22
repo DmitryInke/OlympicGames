@@ -2,7 +2,7 @@ package org.afeka.oop.model;
 
 import org.afeka.oop.listeners.SystemEventsListener;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public interface IOlympicGames {
     String[] getWinners();
@@ -23,7 +23,7 @@ public interface IOlympicGames {
 
     void createTeam(Team newTeam) throws Exception;
 
-    void determineTheWinnersInOlympicGames(Date startDate, Date endDate) throws Exception;
+    void determineTheWinnersInOlympicGames(LocalDate startDate, LocalDate endDate) throws Exception;
 
     void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception;
 

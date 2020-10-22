@@ -4,14 +4,15 @@ import org.afeka.oop.listeners.SystemEventsListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class OlympicGames implements IOlympicGames {
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private List<Competition<Team>> allTeamsInCompetition;
     private List<Competition<Sportsman>> allSportsmansInCompetition;
     private List<Country> allCountries;
@@ -114,19 +115,18 @@ public class OlympicGames implements IOlympicGames {
 
     }
 
-    public void determineTheWinnersInOlympicGames(Date startDate, Date endDate) throws Exception {
-        if (startDate.before(endDate)) {
+    public void determineTheWinnersInOlympicGames(LocalDate startDate, LocalDate endDate) throws Exception {
+        if (startDate.isBefore(endDate)) {
             if (allSportsmansInCompetition.size() + allTeamsInCompetition.size() < 1) {
                 throw new Exception("It is impossible to determine the winner without competition");
             }
             if (allCountries.size() < 3) {
                 throw new Exception(
-                        "It is impossible It is impossible to determine the winner if there are less than 3 countries");
+                        "It is impossible to determine the winner if there are less than 3 countries");
             }
             Collections.sort(allCountries, new CompareCountryByMedals());
             for (int i = 0; i < winners.length; i++) {
                 winners[i] = allCountries.get(i).getName();
-                System.out.println(winners[i] + " " + allCountries.get(i).getNumOfMedals());
             }
         } else {
             throw new Exception("Invalid date of the Olympiad " + dateFormat.format(startDate) + " after " + dateFormat.format(endDate));

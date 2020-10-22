@@ -441,6 +441,15 @@ public class SystemJavaFX implements AbstractSystemView {
             }
         });
 
+        btnDetermineWinners.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent action) {
+                for (SystemUIEventsListener l : allListeners) {
+                    l.determineTheWinnersInOlympicGames(dpStartDate.getValue(), dpEndDate.getValue());
+                }
+            }
+        });
+
 
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tab1.setContent(vbCountry);
