@@ -257,13 +257,13 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
 
     @Override
     public void determineTheWinnersInOlympicGames(LocalDate startDate, LocalDate endDate) {
-        if(startDate == null || endDate == null){
+        if (startDate == null || endDate == null) {
             systemView.exceptionMessage("Choose date for olympic games");
-        }else{
-            try{
+        } else {
+            try {
                 systemModel.determineTheWinnersInOlympicGames(startDate, endDate);
-                systemView.successfulMessage("1: " + systemModel.getWinners()[0] + "\n2: " + systemModel.getWinners()[1] + "\n3: " + systemModel.getWinners()[2] +"\n We will see you in four years");
-            }catch (Exception e){
+                systemView.successfulMessage("The Winners"+"\n1: " + systemModel.getWinners()[0] + "\n2: " + systemModel.getWinners()[1] + "\n3: " + systemModel.getWinners()[2] + "\n We will see you in four years");
+            } catch (Exception e) {
                 systemView.exceptionMessage(e.getMessage());
             }
         }
