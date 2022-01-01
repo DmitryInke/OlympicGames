@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Competition<T extends CompetitorsDetails> {
+    private Integer cid = null;
     private SPORT_TYPE sportType;
     private Stadium stadium;
     private Referee referee;
@@ -90,4 +91,11 @@ public class Competition<T extends CompetitorsDetails> {
         return (this.clazz.equals(Sportsman.class) ? "Single " : "Team ") + "Competition, sport type: " + sportType;
     }
 
+    public Integer getCid() {
+        return cid;
+    }
+
+    public void setCid(Integer cid) {
+        this.cid = cid;
+    }
 }

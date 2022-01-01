@@ -1,6 +1,7 @@
 package org.afeka.oop.model;
 
 public class Stadium {
+    private Integer sid = null;
     private String name;
     private String address;
     private int capacity;
@@ -35,4 +36,11 @@ public class Stadium {
         return "Stadium " + name + ", address: " + address + ", capacity: " + capacity + "";
     }
 
+    public Integer getSid() {
+        return sid;
+    }
+
+    public void setSid(Integer sid) {
+        this.sid = sid;
+    }
 }

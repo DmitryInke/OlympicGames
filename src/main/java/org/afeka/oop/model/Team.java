@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Team implements CompetitorsDetails {
+    private Integer tid = null;
     private SPORT_TYPE sportType;
     private List<Sportsman> allSportsmans;
     private Country country;
@@ -51,4 +52,11 @@ public class Team implements CompetitorsDetails {
         return "Team: " + country + " (" + sportType + ")";
     }
 
+    public Integer getTid() {
+        return tid;
+    }
+
+    public void setTid(Integer tid) {
+        this.tid = tid;
+    }
 }

@@ -22,15 +22,15 @@ public class OlympicGames implements IOlympicGames {
     private ArrayList<SystemEventsListener> listeners;
 
     public OlympicGames() {
-        this.allTeamsInCompetition = new ArrayList<Competition<Team>>();
-        this.allSportsmansInCompetition = new ArrayList<Competition<Sportsman>>();
-        this.allCountries = new ArrayList<Country>();
-        this.allStadiums = new ArrayList<Stadium>();
-        this.allSportsmans = new ArrayList<Sportsman>();
-        this.allReferee = new ArrayList<Referee>();
-        this.allTeams = new ArrayList<Team>();
+        this.allTeamsInCompetition = new ArrayList<>();
+        this.allSportsmansInCompetition = new ArrayList<>();
+        this.allCountries = new ArrayList<>();
+        this.allStadiums = new ArrayList<>();
+        this.allSportsmans = new ArrayList<>();
+        this.allReferee = new ArrayList<>();
+        this.allTeams = new ArrayList<>();
         this.winners = new String[3];
-        this.listeners = new ArrayList<SystemEventsListener>();
+        this.listeners = new ArrayList<>();
     }
 
     public void registerListener(SystemEventsListener listener) {

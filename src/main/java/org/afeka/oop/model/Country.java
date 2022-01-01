@@ -1,7 +1,13 @@
 package org.afeka.oop.model;
 
 public class Country {
+    private Integer cid = null;
     private String name;
+
+    public void setNumOfMedals(int numOfMedals) {
+        this.numOfMedals = numOfMedals;
+    }
+
     private int numOfMedals;
 
     private final int FIRST_PLACE = 3;
@@ -47,4 +53,11 @@ public class Country {
         return getName();
     }
 
+    public Integer getCid() {
+        return cid;
+    }
+
+    public void setCid(Integer cid) {
+        this.cid = cid;
+    }
 }

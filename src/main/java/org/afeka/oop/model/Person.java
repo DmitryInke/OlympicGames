@@ -1,6 +1,7 @@
 package org.afeka.oop.model;
 
 public abstract class Person {
+    protected Integer pid = null;
     protected String name;
     protected SPORT_TYPE sportType;
     protected Country country;
@@ -34,5 +35,13 @@ public abstract class Person {
     @Override
     public String toString() {
         return "" + name + ", country: " + country.getName() + ", sport type: " + (sportType);
+    }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 }
