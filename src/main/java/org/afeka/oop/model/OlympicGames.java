@@ -148,7 +148,7 @@ public class OlympicGames implements IOlympicGames {
     }
 
 
-    public void loadFromDB() throws SQLException {
+    public <T extends CompetitorsDetails> void loadFromDB() throws SQLException {
         List<Country> tempCountry = MySQL.loadAllCountries();
         for (Country ctr : tempCountry) {
             allCountries.add(ctr);
@@ -175,23 +175,30 @@ public class OlympicGames implements IOlympicGames {
 
         List<Team> tempTeam = MySQL.loadAllTeams(this);
         for (Team tm : tempTeam) {
+            List<Sportsman> tempSportsmen = MySQL.loadSportsmenToTeams(this, tm);
+            for (Sportsman sp : tempSportsmen) {
+                tm.getAllSportsmans().add(sp);
+            }
             allTeams.add(tm);
             fireCreateTeamEvent(tm);
         }
 
-        List<Competition<Team>> tempCompetitionTeam = MySQL.loadTeamCompetition(this);
-        for (Competition<Team> ctm : tempCompetitionTeam) {
-            allTeamsInCompetition.add(ctm);
-            fireCreateTeamCompetitionEvent(ctm);
+
+        List<Competition<T>> tempCompetition = MySQL.loadAllCompetition(this);
+        for (Competition<T> cmp : tempCompetition) {
+            List<T> tempCompetitors = (List<T>) MySQL.loadCompetitorsToCompetition(this, cmp);
+            for (T comp : tempCompetitors) {
+                cmp.getAllCompetitors().add(comp);
+            }
+            if (cmp.getClazz().getSimpleName().equals("Team")) {
+                allTeamsInCompetition.add((Competition<Team>) cmp);
+                fireCreateTeamCompetitionEvent((Competition<Team>) cmp);
+            } else {
+                allSportsmansInCompetition.add((Competition<Sportsman>) cmp);
+                fireCreateSingleCompetitionEvent((Competition<Sportsman>) cmp);
+            }
+
         }
-
-        List<Competition<Sportsman>> tempCompetitionSportsman = MySQL.loadSportsmanCompetition(this);
-        for (Competition<Sportsman> csp : tempCompetitionSportsman) {
-            allSportsmansInCompetition.add(csp);
-            fireCreateSingleCompetitionEvent(csp);
-        }
-
-
     }
 
     public Country getCountryById(Integer cid) {
@@ -232,6 +239,14 @@ public class OlympicGames implements IOlympicGames {
         return null;
     }
 
+    public Team getTeamById(Integer tid) {
+        for (Team tm : allTeams) {
+            if (tm.getTid() == tid) {
+                return tm;
+            }
+        }
+        return null;
+    }
 
 
     public void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception {
@@ -239,7 +254,12 @@ public class OlympicGames implements IOlympicGames {
     }
 
     public void addTeamToCompetition(Team team, Competition<Team> competition) throws Exception {
-        competition.addCompetitorsToCompetition(team);
+        if(!team.getAllSportsmans().isEmpty() && team.getAllSportsmans().size() > 1){
+            competition.addCompetitorsToCompetition(team);
+        }else{
+            throw new Exception("Can not add a team with less than two players to the competition");
+        }
+
     }
 
     public void addSportsmanToCompetition(Sportsman sportsman, Competition<Sportsman> competition) throws Exception {

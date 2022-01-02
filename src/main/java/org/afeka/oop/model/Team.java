@@ -29,6 +29,10 @@ public class Team implements CompetitorsDetails {
         return country;
     }
 
+    public Integer getPid() {
+        return getTid();
+    }
+
     public int teamSize() {
         return allSportsmans.size();
     }

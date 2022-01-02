@@ -70,8 +70,8 @@ public class MySQL {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
             Statement stm = conn.createStatement();
-            String sql = String.format("insert into Team (sport_type,sportsman_id,country_id) values (%d, %d, %d)", SPORT_TYPE.valueOf(team.getSportType().toString()).ordinal(),
-                    null, team.getCountry().getCid());
+            String sql = String.format("insert into Team (sport_type,country_id) values (%d, %d)", SPORT_TYPE.valueOf(team.getSportType().toString()).ordinal(),
+                    team.getCountry().getCid());
             return stm.executeUpdate(sql);
         } finally {
             conn.close();
@@ -84,8 +84,8 @@ public class MySQL {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
             Statement stm = conn.createStatement();
-            String sql = String.format("insert into Team values (%d, %d, %d)", team.getSportType(),
-                    null, sportsman.getPid());
+            String sql = String.format("insert into SportsmenToTeam (team_id, sportsman_id) values (%d, %d)", team.getTid(),
+                    sportsman.getPid());
             return stm.executeUpdate(sql);
         } finally {
             conn.close();
@@ -106,27 +106,14 @@ public class MySQL {
         }
     }
 
-    public static int updateCompetitionWithSportsman(Competition competition, Sportsman sportsman) throws SQLException {
+    public static  <T extends CompetitorsDetails> int addCompetitorsToCompetition(Competition<T> competition, T competitor) throws SQLException {
         Connection conn = null;
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
             Statement stm = conn.createStatement();
-            String sql = String.format("insert into CompetitionToSportsman (competition_id,sportsman_id) values (%d,%d)",
-                    competition.getCid(), sportsman.getPid());
-            return stm.executeUpdate(sql);
-        } finally {
-            conn.close();
-        }
-    }
-
-    public static int updateCompetitionWithTeam(Competition competition, Team team) throws SQLException {
-        Connection conn = null;
-        try {
-            conn = DriverManager.
-                    getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into CompetitionToTeams (%d,%d)", competition.getCid(), team.getTid());
+            String sql = String.format("insert into CompetitionToCompetitors (competition_id, competitor_id) values (%d, %d)", competition.getCid(),
+                    competitor.getPid());
             return stm.executeUpdate(sql);
         } finally {
             conn.close();
@@ -335,7 +322,6 @@ public class MySQL {
             while (rs.next()) {
                 Integer id = rs.getInt("tid");
                 Integer cid = rs.getInt("country_id");
-                Integer sid = rs.getInt("sportsman_id");
                 int sportType = rs.getInt("sport_type");
                 Team r = new Team(SPORT_TYPE.values()[sportType], theModel.getCountryById(cid));
                 r.setTid(id);
@@ -347,21 +333,46 @@ public class MySQL {
         }
     }
 
-    public static List<Competition<Team>> loadTeamCompetition(IOlympicGames theModel) throws SQLException {
+    public static List<Sportsman> loadSportsmenToTeams(IOlympicGames theModel, Team team) throws SQLException {
         Connection conn = null;
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
             Statement stm = conn.createStatement();
-            String query = "select * from competition where type_competition = 'Team'";
+            String query = String.format("select sportsman_id from SportsmenToTeam where team_id = %d", team.getTid());
             ResultSet rs = stm.executeQuery(query);
-            List<Competition<Team>> l = new ArrayList<>();
+            List<Sportsman> l = new ArrayList<>();
+            while (rs.next()) {
+                Integer id = rs.getInt("sportsman_id");
+                l.add(theModel.getSportsmanById(id));
+            }
+            return l;
+        } finally {
+            conn.close();
+        }
+    }
+
+    public static <T extends CompetitorsDetails> List<Competition<T>> loadAllCompetition(IOlympicGames theModel) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
+            Statement stm = conn.createStatement();
+            String query = "select * from competition";
+            ResultSet rs = stm.executeQuery(query);
+            List<Competition<T>> l = new ArrayList<>();
             while (rs.next()) {
                 Integer id = rs.getInt("cid");
                 Integer rid = rs.getInt("referee_id");
                 Integer sid = rs.getInt("stadium_id");
                 int sportType = rs.getInt("sport_type");
-                Competition<Team> c = new Competition<Team>(SPORT_TYPE.values()[sportType], theModel.getStadiumById(sid), theModel.getRefereeById(rid), Team.class);
+                String competitionType = rs.getString("type_competition");
+                Competition<T> c;
+                if (competitionType.equals("Team")) {
+                    c = (Competition<T>) new Competition<Team>(SPORT_TYPE.values()[sportType], theModel.getStadiumById(sid), theModel.getRefereeById(rid), Team.class);
+                } else {
+                    c = (Competition<T>) new Competition<Sportsman>(SPORT_TYPE.values()[sportType], theModel.getStadiumById(sid), theModel.getRefereeById(rid), Sportsman.class);
+                }
                 c.setCid(id);
                 l.add(c);
             }
@@ -371,29 +382,30 @@ public class MySQL {
         }
     }
 
-
-    public static List<Competition<Sportsman>> loadSportsmanCompetition(IOlympicGames theModel) throws SQLException {
+    public static<T extends CompetitorsDetails> List<T> loadCompetitorsToCompetition(IOlympicGames theModel, Competition<T> competition) throws SQLException {
         Connection conn = null;
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
             Statement stm = conn.createStatement();
-            String query = "select * from competition where type_competition = 'Sportsman'";
+
+            String query = String.format("select competitor_id,type_competition from Competition join CompetitionToCompetitors on cid=competition_id where cid = %d; ", competition.getCid());
             ResultSet rs = stm.executeQuery(query);
-            List<Competition<Sportsman>> l = new ArrayList<>();
+            List<T> l = new ArrayList<>();
             while (rs.next()) {
-                Integer id = rs.getInt("cid");
-                Integer rid = rs.getInt("referee_id");
-                Integer sid = rs.getInt("stadium_id");
-                int sportType = rs.getInt("sport_type");
-                Competition<Sportsman> c = new Competition<Sportsman>(SPORT_TYPE.values()[sportType], theModel.getStadiumById(sid), theModel.getRefereeById(rid), Sportsman.class);
-                c.setCid(id);
-                l.add(c);
+                Integer id = rs.getInt("competitor_id");
+                String competitionType = rs.getString("type_competition");
+                if (competitionType.equals("Team")) {
+                    l.add((T) theModel.getTeamById(id));
+                }else{
+                    l.add((T) theModel.getSportsmanById(id));
+                }
             }
             return l;
         } finally {
             conn.close();
         }
     }
+
 
 }

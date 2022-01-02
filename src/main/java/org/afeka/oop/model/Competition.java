@@ -1,5 +1,7 @@
 package org.afeka.oop.model;
 
+import org.afeka.oop.dao.MySQL;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ public class Competition<T extends CompetitorsDetails> {
         if ((a.getSportType() == SPORT_TYPE.BOTH || getSportType().equals(a.getSportType()))
                 && !allCompetitors.contains(a)) {
             allCompetitors.add(a);
+            MySQL.addCompetitorsToCompetition(this,a);
         } else {
             throw new Exception("Failed to add because it already exists/invalid credentials");
         }
@@ -101,5 +104,9 @@ public class Competition<T extends CompetitorsDetails> {
 
     public Class<T> getClazz() {
         return clazz;
+    }
+
+    public List<T> getAllCompetitors() {
+        return allCompetitors;
     }
 }

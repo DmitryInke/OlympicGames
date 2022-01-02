@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public interface IOlympicGames {
     String[] getWinners();
 
-    void loadFromDB() throws SQLException;
+    <T extends CompetitorsDetails> void loadFromDB() throws SQLException;
 
     Country getCountryById(Integer cid);
 
@@ -17,6 +17,8 @@ public interface IOlympicGames {
     Referee getRefereeById(Integer rid);
 
     Stadium getStadiumById(Integer sid);
+
+    Team getTeamById(Integer tid);
 
     void registerListener(SystemEventsListener systemController);
 

@@ -5,4 +5,7 @@ public interface CompetitorsDetails {
     Country getCountry();
 
     SPORT_TYPE getSportType();
+
+    Integer getPid();
+
 }
