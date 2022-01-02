@@ -7,9 +7,9 @@ import java.util.List;
 
 public class Team implements CompetitorsDetails {
     private Integer tid = null;
-    private SPORT_TYPE sportType;
-    private List<Sportsman> allSportsmans;
-    private Country country;
+    private final SPORT_TYPE sportType;
+    private final List<Sportsman> allSportsmans;
+    private final Country country;
 
     public Team(SPORT_TYPE sportType, Country country) {
         this.sportType = sportType;
@@ -33,6 +33,14 @@ public class Team implements CompetitorsDetails {
         return getTid();
     }
 
+    public Integer getTid() {
+        return tid;
+    }
+
+    public void setTid(Integer tid) {
+        this.tid = tid;
+    }
+
     public int teamSize() {
         return allSportsmans.size();
     }
@@ -41,7 +49,7 @@ public class Team implements CompetitorsDetails {
         if ((newSportsman.getSportType() == SPORT_TYPE.BOTH || getSportType().equals(newSportsman.getSportType()))
                 && newSportsman.getCountry() == getCountry() && !allSportsmans.contains(newSportsman)) {
             allSportsmans.add(newSportsman);
-            MySQL.addSportsmanToTeam(this,newSportsman);
+            MySQL.addSportsmanToTeam(this, newSportsman);
         } else {
             throw new Exception("Failed to add because it already exists/invalid credentials");
         }
@@ -57,13 +65,5 @@ public class Team implements CompetitorsDetails {
     @Override
     public String toString() {
         return "Team: " + country + " (" + sportType + ")";
-    }
-
-    public Integer getTid() {
-        return tid;
-    }
-
-    public void setTid(Integer tid) {
-        this.tid = tid;
     }
 }

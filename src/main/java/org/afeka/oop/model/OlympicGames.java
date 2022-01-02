@@ -134,6 +134,11 @@ public class OlympicGames implements IOlympicGames {
             if (allSportsmansInCompetition.size() + allTeamsInCompetition.size() < 1) {
                 throw new Exception("It is impossible to determine the winner without competition");
             }
+
+            if(!checkIfHoldCompetition()){
+                throw new Exception("It is impossible to determine the winner without holding competition");
+            }
+
             if (allCountries.size() < 3) {
                 throw new Exception(
                         "It is impossible to determine the winner if there are less than 3 countries");
@@ -145,6 +150,20 @@ public class OlympicGames implements IOlympicGames {
         } else {
             throw new Exception("Invalid date of the Olympiad " + dateFormat.format(startDate) + " after " + dateFormat.format(endDate));
         }
+    }
+
+    private boolean checkIfHoldCompetition() {
+        for (Competition cmp : allTeamsInCompetition) {
+            if (cmp.isHoldCompetition()) {
+                return true;
+            }
+        }
+        for (Competition cmp : allSportsmansInCompetition) {
+            if (cmp.isHoldCompetition()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -185,7 +204,7 @@ public class OlympicGames implements IOlympicGames {
 
 
         List<Competition<T>> tempCompetition = MySQL.loadAllCompetition(this);
-        for (Competition<T> cmp : tempCompetition) {
+        for (Competition cmp : tempCompetition) {
             List<T> tempCompetitors = (List<T>) MySQL.loadCompetitorsToCompetition(this, cmp);
             for (T comp : tempCompetitors) {
                 cmp.getAllCompetitors().add(comp);
@@ -199,6 +218,10 @@ public class OlympicGames implements IOlympicGames {
             }
 
         }
+    }
+
+    public void resetNumOfMedalsInDB() throws SQLException {
+        MySQL.resetNumOfMedals();
     }
 
     public Country getCountryById(Integer cid) {
@@ -254,9 +277,9 @@ public class OlympicGames implements IOlympicGames {
     }
 
     public void addTeamToCompetition(Team team, Competition<Team> competition) throws Exception {
-        if(!team.getAllSportsmans().isEmpty() && team.getAllSportsmans().size() > 1){
+        if (!team.getAllSportsmans().isEmpty() && team.getAllSportsmans().size() > 1) {
             competition.addCompetitorsToCompetition(team);
-        }else{
+        } else {
             throw new Exception("Can not add a team with less than two players to the competition");
         }
 

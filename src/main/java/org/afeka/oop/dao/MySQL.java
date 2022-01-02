@@ -106,7 +106,7 @@ public class MySQL {
         }
     }
 
-    public static  <T extends CompetitorsDetails> int addCompetitorsToCompetition(Competition<T> competition, T competitor) throws SQLException {
+    public static <T extends CompetitorsDetails> int addCompetitorsToCompetition(Competition<T> competition, T competitor) throws SQLException {
         Connection conn = null;
         try {
             conn = DriverManager.
@@ -382,7 +382,7 @@ public class MySQL {
         }
     }
 
-    public static<T extends CompetitorsDetails> List<T> loadCompetitorsToCompetition(IOlympicGames theModel, Competition<T> competition) throws SQLException {
+    public static <T extends CompetitorsDetails> List<T> loadCompetitorsToCompetition(IOlympicGames theModel, Competition<T> competition) throws SQLException {
         Connection conn = null;
         try {
             conn = DriverManager.
@@ -397,11 +397,37 @@ public class MySQL {
                 String competitionType = rs.getString("type_competition");
                 if (competitionType.equals("Team")) {
                     l.add((T) theModel.getTeamById(id));
-                }else{
+                } else {
                     l.add((T) theModel.getSportsmanById(id));
                 }
             }
             return l;
+        } finally {
+            conn.close();
+        }
+    }
+
+    public static int updateNumOfMedals(Country country) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
+            Statement stm = conn.createStatement();
+            String sql = String.format("update Country set num_medals = %d where cid = %d", country.getNumOfMedals(), country.getCid());
+            return stm.executeUpdate(sql);
+        } finally {
+            conn.close();
+        }
+    }
+
+    public static int resetNumOfMedals() throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
+            Statement stm = conn.createStatement();
+            String sql = String.format("update Country set num_medals = 0");
+            return stm.executeUpdate(sql);
         } finally {
             conn.close();
         }

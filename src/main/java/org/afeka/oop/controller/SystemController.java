@@ -5,12 +5,13 @@ import org.afeka.oop.listeners.SystemUIEventsListener;
 import org.afeka.oop.model.*;
 import org.afeka.oop.view.AbstractSystemView;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class SystemController implements SystemUIEventsListener, SystemEventsListener {
 
-    private IOlympicGames systemModel;
-    private AbstractSystemView systemView;
+    private final IOlympicGames systemModel;
+    private final AbstractSystemView systemView;
 
     public SystemController(IOlympicGames theModel, AbstractSystemView theView) {
         this.systemModel = theModel;
@@ -262,11 +263,23 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
         } else {
             try {
                 systemModel.determineTheWinnersInOlympicGames(startDate, endDate);
-                systemView.successfulMessage("The Winners"+"\n1: " + systemModel.getWinners()[0] + "\n2: " + systemModel.getWinners()[1] + "\n3: " + systemModel.getWinners()[2] + "\n We will see you in four years");
+                systemView.successfulMessage("The Winners" + "\n1: " + systemModel.getWinners()[0] + "\n2: " + systemModel.getWinners()[1] + "\n3: " + systemModel.getWinners()[2] + "\n We will see you in four years");
             } catch (Exception e) {
                 systemView.exceptionMessage(e.getMessage());
             }
         }
     }
+
+    @Override
+    public void resetNumOfMedals() {
+        try {
+            systemModel.resetNumOfMedalsInDB();
+            systemView.exceptionMessage("Num of medals are successfully reset in the database");
+        } catch (Exception e) {
+            systemView.exceptionMessage(e.getMessage());
+        }
+
+    }
+
 
 }

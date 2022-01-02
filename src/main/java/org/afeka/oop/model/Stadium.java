@@ -2,9 +2,9 @@ package org.afeka.oop.model;
 
 public class Stadium {
     private Integer sid = null;
-    private String name;
-    private String address;
-    private int capacity;
+    private final String name;
+    private final String address;
+    private final int capacity;
 
     public Stadium(String name, String address, int capacity) {
         this.name = name;
@@ -24,6 +24,14 @@ public class Stadium {
         return capacity;
     }
 
+    public Integer getSid() {
+        return sid;
+    }
+
+    public void setSid(Integer sid) {
+        this.sid = sid;
+    }
+
     public boolean equals(Object other) {
         if (!(other instanceof Stadium))
             return false;
@@ -36,11 +44,4 @@ public class Stadium {
         return "Stadium " + name + ", address: " + address + ", capacity: " + capacity + "";
     }
 
-    public Integer getSid() {
-        return sid;
-    }
-
-    public void setSid(Integer sid) {
-        this.sid = sid;
-    }
 }

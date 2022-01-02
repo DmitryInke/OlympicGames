@@ -1,13 +1,12 @@
 package org.afeka.oop.model;
 
+import org.afeka.oop.dao.MySQL;
+
+import java.sql.SQLException;
+
 public class Country {
     private Integer cid = null;
-    private String name;
-
-    public void setNumOfMedals(int numOfMedals) {
-        this.numOfMedals = numOfMedals;
-    }
-
+    private final String name;
     private int numOfMedals;
 
     private final int FIRST_PLACE = 3;
@@ -23,7 +22,7 @@ public class Country {
         return numOfMedals;
     }
 
-    public void CalculateNumOfMedals(int place) {
+    public void CalculateNumOfMedals(int place) throws SQLException {
         switch (place) {
             case 0:
                 this.numOfMedals += FIRST_PLACE;
@@ -35,10 +34,23 @@ public class Country {
                 this.numOfMedals += THIRD_PLACE;
                 break;
         }
+        MySQL.updateNumOfMedals(this);
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setNumOfMedals(int numOfMedals) {
+        this.numOfMedals = numOfMedals;
+    }
+
+    public Integer getCid() {
+        return cid;
+    }
+
+    public void setCid(Integer cid) {
+        this.cid = cid;
     }
 
     public boolean equals(Object other) {
@@ -53,11 +65,4 @@ public class Country {
         return getName();
     }
 
-    public Integer getCid() {
-        return cid;
-    }
-
-    public void setCid(Integer cid) {
-        this.cid = cid;
-    }
 }

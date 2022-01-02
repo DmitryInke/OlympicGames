@@ -10,10 +10,7 @@ public class Referee extends Person {
         if (!(other instanceof Referee))
             return false;
 
-        if (!(super.equals(other)))
-            return false;
-
-        return true;
+        return super.equals(other);
     }
 
     public String toString() {

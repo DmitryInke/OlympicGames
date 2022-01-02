@@ -10,10 +10,7 @@ public class Sportsman extends Person implements CompetitorsDetails {
         if (!(other instanceof Sportsman))
             return false;
 
-        if (!(super.equals(other)))
-            return false;
-
-        return true;
+        return super.equals(other);
     }
 
     public String toString() {

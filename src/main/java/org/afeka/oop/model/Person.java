@@ -24,6 +24,14 @@ public abstract class Person {
         return country;
     }
 
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
+    }
+
     public boolean equals(Object other) {
         if (!(other instanceof Person))
             return false;
@@ -37,11 +45,4 @@ public abstract class Person {
         return "" + name + ", country: " + country.getName() + ", sport type: " + (sportType);
     }
 
-    public Integer getPid() {
-        return pid;
-    }
-
-    public void setPid(Integer pid) {
-        this.pid = pid;
-    }
 }

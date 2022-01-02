@@ -20,6 +20,8 @@ public interface IOlympicGames {
 
     Team getTeamById(Integer tid);
 
+    void resetNumOfMedalsInDB() throws SQLException;
+
     void registerListener(SystemEventsListener systemController);
 
     void createTeamCompetition(Competition<Team> newCompetition) throws Exception;
