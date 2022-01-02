@@ -98,4 +98,8 @@ public class Competition<T extends CompetitorsDetails> {
     public void setCid(Integer cid) {
         this.cid = cid;
     }
+
+    public Class<T> getClazz() {
+        return clazz;
+    }
 }

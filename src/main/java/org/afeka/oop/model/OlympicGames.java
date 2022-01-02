@@ -1,7 +1,9 @@
 package org.afeka.oop.model;
 
+import org.afeka.oop.dao.MySQL;
 import org.afeka.oop.listeners.SystemEventsListener;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class OlympicGames implements IOlympicGames {
     private List<Country> allCountries;
     private List<Stadium> allStadiums;
     private List<Sportsman> allSportsmans;
-    private List<Referee> allReferee;
+    private List<Referee> allReferees;
     private List<Team> allTeams;
     private String[] winners;
     private ArrayList<SystemEventsListener> listeners;
@@ -27,7 +29,7 @@ public class OlympicGames implements IOlympicGames {
         this.allCountries = new ArrayList<>();
         this.allStadiums = new ArrayList<>();
         this.allSportsmans = new ArrayList<>();
-        this.allReferee = new ArrayList<>();
+        this.allReferees = new ArrayList<>();
         this.allTeams = new ArrayList<>();
         this.winners = new String[3];
         this.listeners = new ArrayList<>();
@@ -49,6 +51,8 @@ public class OlympicGames implements IOlympicGames {
             }
         }
         allTeamsInCompetition.add(newCompetition);
+        MySQL.addCompetition(newCompetition);
+        newCompetition.setCid(MySQL.getCompetitionById(newCompetition));
         fireCreateTeamCompetitionEvent(newCompetition);
     }
 
@@ -59,6 +63,8 @@ public class OlympicGames implements IOlympicGames {
             }
         }
         allSportsmansInCompetition.add(newCompetition);
+        MySQL.addCompetition(newCompetition);
+        newCompetition.setCid(MySQL.getCompetitionById(newCompetition));
         fireCreateSingleCompetitionEvent(newCompetition);
     }
 
@@ -69,6 +75,8 @@ public class OlympicGames implements IOlympicGames {
             }
         }
         allCountries.add(newCountry);
+        MySQL.addCountry(newCountry);
+        newCountry.setCid(MySQL.getCountryId(newCountry));
         fireCreateCountryEvent(newCountry);
     }
 
@@ -79,6 +87,8 @@ public class OlympicGames implements IOlympicGames {
             }
         }
         allStadiums.add(newStadium);
+        MySQL.addStadium(newStadium);
+        newStadium.setSid(MySQL.getStadiumId(newStadium));
         fireCreateStadiumEvent(newStadium);
     }
 
@@ -89,16 +99,20 @@ public class OlympicGames implements IOlympicGames {
             }
         }
         allSportsmans.add(newSportsman);
+        MySQL.addSportsmen(newSportsman);
+        newSportsman.setPid(MySQL.getSportsmanId(newSportsman));
         fireCreateSportsmanEvent(newSportsman);
     }
 
     public void createReferee(Referee newReferee) throws Exception {
-        for (int i = 0; i < allReferee.size(); i++) {
-            if (allReferee.get(i).equals(newReferee)) {
+        for (int i = 0; i < allReferees.size(); i++) {
+            if (allReferees.get(i).equals(newReferee)) {
                 throw new Exception("This referee already exists");
             }
         }
-        allReferee.add(newReferee);
+        allReferees.add(newReferee);
+        MySQL.addReferee(newReferee);
+        newReferee.setPid(MySQL.getRefereeId(newReferee));
         fireCreateRefereeEvent(newReferee);
     }
 
@@ -109,6 +123,8 @@ public class OlympicGames implements IOlympicGames {
             }
         }
         allTeams.add(newTeam);
+        MySQL.addTeam(newTeam);
+        newTeam.setTid(MySQL.getTeamId(newTeam));
         fireCreateTeamEvent(newTeam);
 
     }
@@ -130,6 +146,93 @@ public class OlympicGames implements IOlympicGames {
             throw new Exception("Invalid date of the Olympiad " + dateFormat.format(startDate) + " after " + dateFormat.format(endDate));
         }
     }
+
+
+    public void loadFromDB() throws SQLException {
+        List<Country> tempCountry = MySQL.loadAllCountries();
+        for (Country ctr : tempCountry) {
+            allCountries.add(ctr);
+            fireCreateCountryEvent(ctr);
+        }
+
+        List<Stadium> tempStadium = MySQL.loadAllStadiums();
+        for (Stadium std : tempStadium) {
+            allStadiums.add(std);
+            fireCreateStadiumEvent(std);
+        }
+
+        List<Sportsman> tempSportsman = MySQL.loadAllSportsmans(this);
+        for (Sportsman spr : tempSportsman) {
+            allSportsmans.add(spr);
+            fireCreateSportsmanEvent(spr);
+        }
+
+        List<Referee> tempReferee = MySQL.loadAllReferees(this);
+        for (Referee rf : tempReferee) {
+            allReferees.add(rf);
+            fireCreateRefereeEvent(rf);
+        }
+
+        List<Team> tempTeam = MySQL.loadAllTeams(this);
+        for (Team tm : tempTeam) {
+            allTeams.add(tm);
+            fireCreateTeamEvent(tm);
+        }
+
+        List<Competition<Team>> tempCompetitionTeam = MySQL.loadTeamCompetition(this);
+        for (Competition<Team> ctm : tempCompetitionTeam) {
+            allTeamsInCompetition.add(ctm);
+            fireCreateTeamCompetitionEvent(ctm);
+        }
+
+        List<Competition<Sportsman>> tempCompetitionSportsman = MySQL.loadSportsmanCompetition(this);
+        for (Competition<Sportsman> csp : tempCompetitionSportsman) {
+            allSportsmansInCompetition.add(csp);
+            fireCreateSingleCompetitionEvent(csp);
+        }
+
+
+    }
+
+    public Country getCountryById(Integer cid) {
+        for (Country ctr : allCountries) {
+            if (ctr.getCid() == cid) {
+                return ctr;
+            }
+        }
+        return null;
+    }
+
+    public Sportsman getSportsmanById(Integer sid) {
+        if (sid != null) {
+            for (Sportsman spr : allSportsmans) {
+                if (spr.getPid() == sid) {
+                    return spr;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Stadium getStadiumById(Integer sid) {
+        for (Stadium std : allStadiums) {
+            if (std.getSid() == sid) {
+                return std;
+            }
+        }
+        return null;
+    }
+
+    public Referee getRefereeById(Integer rid) {
+        for (Referee rtd : allReferees) {
+            if (rtd.getPid() == rid) {
+                return rtd;
+            }
+        }
+        return null;
+    }
+
+
 
     public void addSportsmanToTeam(Sportsman newSportsman, Team team) throws Exception {
         team.addSportsmanToTeam(newSportsman);

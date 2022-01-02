@@ -1,5 +1,7 @@
 package org.afeka.oop.model;
 
+import org.afeka.oop.dao.MySQL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +13,7 @@ public class Team implements CompetitorsDetails {
 
     public Team(SPORT_TYPE sportType, Country country) {
         this.sportType = sportType;
-        this.allSportsmans = new ArrayList<Sportsman>();
+        this.allSportsmans = new ArrayList<>();
         this.country = country;
     }
 
@@ -35,6 +37,7 @@ public class Team implements CompetitorsDetails {
         if ((newSportsman.getSportType() == SPORT_TYPE.BOTH || getSportType().equals(newSportsman.getSportType()))
                 && newSportsman.getCountry() == getCountry() && !allSportsmans.contains(newSportsman)) {
             allSportsmans.add(newSportsman);
+            MySQL.addSportsmanToTeam(this,newSportsman);
         } else {
             throw new Exception("Failed to add because it already exists/invalid credentials");
         }

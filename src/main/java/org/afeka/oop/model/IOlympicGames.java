@@ -2,10 +2,21 @@ package org.afeka.oop.model;
 
 import org.afeka.oop.listeners.SystemEventsListener;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public interface IOlympicGames {
     String[] getWinners();
+
+    void loadFromDB() throws SQLException;
+
+    Country getCountryById(Integer cid);
+
+    Sportsman getSportsmanById(Integer sid);
+
+    Referee getRefereeById(Integer rid);
+
+    Stadium getStadiumById(Integer sid);
 
     void registerListener(SystemEventsListener systemController);
 
