@@ -32,5 +32,5 @@ public interface SystemUIEventsListener {
 
     void determineTheWinnersInOlympicGames(LocalDate startDate, LocalDate endDate);
 
-    void resetNumOfMedals();
+    void resetNumOfMedalsAndDeleteOlympiadDate();
 }

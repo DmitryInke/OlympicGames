@@ -20,7 +20,7 @@ public interface IOlympicGames {
 
     Team getTeamById(Integer tid);
 
-    void resetNumOfMedalsInDB() throws SQLException;
+    void resetNumOfMedalsAndDeleteOlympiadDateDB() throws SQLException;
 
     void registerListener(SystemEventsListener systemController);
 

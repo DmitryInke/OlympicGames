@@ -3,16 +3,16 @@ package org.afeka.oop.model;
 import org.afeka.oop.dao.MySQL;
 import org.afeka.oop.listeners.SystemEventsListener;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class OlympicGames implements IOlympicGames {
 
-    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("YYYY-MM-DD");
+    Calendar calendar = new GregorianCalendar();
     private List<Competition<Team>> allTeamsInCompetition;
     private List<Competition<Sportsman>> allSportsmansInCompetition;
     private List<Country> allCountries;
@@ -22,6 +22,7 @@ public class OlympicGames implements IOlympicGames {
     private List<Team> allTeams;
     private String[] winners;
     private ArrayList<SystemEventsListener> listeners;
+    private boolean isDetermine;
 
     public OlympicGames() {
         this.allTeamsInCompetition = new ArrayList<>();
@@ -33,6 +34,7 @@ public class OlympicGames implements IOlympicGames {
         this.allTeams = new ArrayList<>();
         this.winners = new String[3];
         this.listeners = new ArrayList<>();
+        this.isDetermine = false;
     }
 
     public void registerListener(SystemEventsListener listener) {
@@ -130,23 +132,34 @@ public class OlympicGames implements IOlympicGames {
     }
 
     public void determineTheWinnersInOlympicGames(LocalDate startDate, LocalDate endDate) throws Exception {
-        if (startDate.isBefore(endDate)) {
+        if (isDetermine) {
+            Date lastEndDate = MySQL.getEndDate();
+            calendar.setTime(lastEndDate);
+            if (startDate.getYear() - calendar.get(Calendar.YEAR) >= 4) {
+                isDetermine = false;
+            } else {
+                throw new Exception("The next Olympiad can only be held in 4 years");
+            }
+        }
+        if (startDate.isBefore(endDate) && !isDetermine) {
             if (allSportsmansInCompetition.size() + allTeamsInCompetition.size() < 1) {
-                throw new Exception("It is impossible to determine the winner without competition");
+                throw new Exception("It is impossible to determine the winners without competition");
             }
 
-            if(!checkIfHoldCompetition()){
-                throw new Exception("It is impossible to determine the winner without holding competition");
+            if (!checkIfHoldCompetition()) {
+                throw new Exception("It is impossible to determine the winners without holding competition");
             }
 
             if (allCountries.size() < 3) {
                 throw new Exception(
-                        "It is impossible to determine the winner if there are less than 3 countries");
+                        "It is impossible to determine the winners if there are less than 3 countries");
             }
             Collections.sort(allCountries, new CompareCountryByMedals());
             for (int i = 0; i < winners.length; i++) {
                 winners[i] = allCountries.get(i).getName();
             }
+            isDetermine = true;
+            MySQL.addDateOfOlympicGames(Date.valueOf(startDate), Date.valueOf(endDate));
         } else {
             throw new Exception("Invalid date of the Olympiad " + dateFormat.format(startDate) + " after " + dateFormat.format(endDate));
         }
@@ -220,8 +233,9 @@ public class OlympicGames implements IOlympicGames {
         }
     }
 
-    public void resetNumOfMedalsInDB() throws SQLException {
+    public void resetNumOfMedalsAndDeleteOlympiadDateDB() throws SQLException {
         MySQL.resetNumOfMedals();
+        MySQL.deleteDateOfOlympiad();
     }
 
     public Country getCountryById(Integer cid) {

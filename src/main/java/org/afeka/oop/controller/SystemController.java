@@ -271,10 +271,10 @@ public class SystemController implements SystemUIEventsListener, SystemEventsLis
     }
 
     @Override
-    public void resetNumOfMedals() {
+    public void resetNumOfMedalsAndDeleteOlympiadDate() {
         try {
-            systemModel.resetNumOfMedalsInDB();
-            systemView.exceptionMessage("Num of medals are successfully reset in the database");
+            systemModel.resetNumOfMedalsAndDeleteOlympiadDateDB();
+            systemView.exceptionMessage("Num of medals are successfully reset in the database and olympiad date drop from database");
         } catch (Exception e) {
             systemView.exceptionMessage(e.getMessage());
         }

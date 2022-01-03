@@ -3,6 +3,7 @@ package org.afeka.oop.dao;
 import org.afeka.oop.model.*;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +14,10 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into Country (name,num_medals) values ('%s', %d)", country.getName(), country.getNumOfMedals());
-            return stm.executeUpdate(sql);
+            PreparedStatement stm = conn.prepareStatement("insert into Country (name,num_medals) values(?,?)");
+            stm.setString(1, country.getName());
+            stm.setInt(2, country.getNumOfMedals());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -26,10 +28,11 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into Stadium (name,address,capacity) values ('%s', '%s', %d)", stadium.getName(),
-                    stadium.getAddress(), stadium.getCapacity());
-            return stm.executeUpdate(sql);
+            PreparedStatement stm = conn.prepareStatement("insert into Stadium (name,address,capacity) values (?,?,?)");
+            stm.setString(1, stadium.getName());
+            stm.setString(2, stadium.getAddress());
+            stm.setInt(3, stadium.getCapacity());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -40,10 +43,11 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into Sportsman (name,country_id,sport_type) values ( '%s', %d, %d)", sportsman.getName(),
-                    sportsman.getCountry().getCid(), SPORT_TYPE.valueOf(sportsman.getSportType().toString()).ordinal());
-            return stm.executeUpdate(sql);
+            PreparedStatement stm = conn.prepareStatement("insert into Sportsman (name,country_id,sport_type) values (?,?,?)");
+            stm.setString(1, sportsman.getName());
+            stm.setInt(2, sportsman.getCountry().getCid());
+            stm.setInt(3, SPORT_TYPE.valueOf(sportsman.getSportType().toString()).ordinal());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -54,11 +58,11 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into Referee (name,country_id,sport_type) values ( '%s', %d, %d)", referee.getName(),
-                    referee.getCountry().getCid(), SPORT_TYPE.valueOf(referee.getSportType().toString()).ordinal());
-            return stm.executeUpdate(sql);
-
+            PreparedStatement stm = conn.prepareStatement("insert into Referee (name,country_id,sport_type) values (?,?,?)");
+            stm.setString(1, referee.getName());
+            stm.setInt(2, referee.getCountry().getCid());
+            stm.setInt(3, SPORT_TYPE.valueOf(referee.getSportType().toString()).ordinal());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -69,10 +73,10 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into Team (sport_type,country_id) values (%d, %d)", SPORT_TYPE.valueOf(team.getSportType().toString()).ordinal(),
-                    team.getCountry().getCid());
-            return stm.executeUpdate(sql);
+            PreparedStatement stm = conn.prepareStatement("insert into Team (sport_type,country_id) values (?,?)");
+            stm.setInt(1, SPORT_TYPE.valueOf(team.getSportType().toString()).ordinal());
+            stm.setInt(2, team.getCountry().getCid());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -83,10 +87,10 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into SportsmenToTeam (team_id, sportsman_id) values (%d, %d)", team.getTid(),
-                    sportsman.getPid());
-            return stm.executeUpdate(sql);
+            PreparedStatement stm = conn.prepareStatement("insert into SportsmenToTeam (team_id, sportsman_id) values (?,?)");
+            stm.setInt(1, team.getTid());
+            stm.setInt(2, sportsman.getPid());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -97,10 +101,12 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("insert into Competition (sport_type,stadium_id,referee_id,type_competition) values (%d, %d, %d, '%s')", SPORT_TYPE.valueOf(competition.getSportType().toString()).ordinal(),
-                    competition.getStadium().getSid(), competition.getReferee().getPid(), competition.getClazz().getSimpleName());
-            return stm.executeUpdate(sql);
+            PreparedStatement stm = conn.prepareStatement("insert into Competition (sport_type,stadium_id,referee_id,type_competition) values (?,?,?,?)");
+            stm.setInt(1, SPORT_TYPE.valueOf(competition.getSportType().toString()).ordinal());
+            stm.setInt(2, competition.getStadium().getSid());
+            stm.setInt(3, competition.getReferee().getPid());
+            stm.setString(4, competition.getClazz().getSimpleName());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -111,10 +117,48 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
+            PreparedStatement stm = conn.prepareStatement("insert into CompetitionToCompetitors (competition_id, competitor_id) values (?,?)");
+            stm.setInt(1, competition.getCid());
+            stm.setInt(2, competitor.getPid());
+            return stm.executeUpdate();
+        } finally {
+            conn.close();
+        }
+    }
+
+    public static int addDateOfOlympicGames(Date startDate, Date endDate) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
             Statement stm = conn.createStatement();
-            String sql = String.format("insert into CompetitionToCompetitors (competition_id, competitor_id) values (%d, %d)", competition.getCid(),
-                    competitor.getPid());
-            return stm.executeUpdate(sql);
+            String query = "select if(exists(select * from OlympicGames), 0, 1) as IsEmpty";
+            ResultSet rs = stm.executeQuery(query);
+            rs.next();
+            String sql;
+            int check = rs.getInt("isEmpty");
+            if (check == 1) {
+                sql = String.format("insert into OlympicGames (start_date,end_date) values ('%s', '%s')", startDate, endDate);
+                return stm.executeUpdate(sql);
+            } else {
+                sql = String.format("update OlympicGames set start_date = '%s', end_date = '%s'", startDate, endDate);
+                return stm.executeUpdate(sql);
+            }
+        } finally {
+            conn.close();
+        }
+    }
+
+    public static Date getEndDate() throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
+            Statement stm = conn.createStatement();
+            String query = String.format("select end_date from OlympicGames");
+            ResultSet rs = stm.executeQuery(query);
+            rs.next();
+            return rs.getDate("end_date");
         } finally {
             conn.close();
         }
@@ -125,9 +169,9 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String query = String.format("select cid from Country where name = '%s'", country.getName());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select cid from Country where name = ?");
+            stm.setString(1, country.getName());
+            ResultSet rs = stm.executeQuery();
             rs.next();
             return rs.getInt("cid");
         } finally {
@@ -140,9 +184,10 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String query = String.format("select sid from Stadium where name = '%s' and address = '%s'", stadium.getName(), stadium.getAddress());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select sid from Stadium where name = ? and address = ?");
+            stm.setString(1, stadium.getName());
+            stm.setString(2, stadium.getAddress());
+            ResultSet rs = stm.executeQuery();
             rs.next();
             return rs.getInt("sid");
         } finally {
@@ -155,10 +200,11 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String query = String.format("select sid from Sportsman where name = '%s' and country_id = %d and sport_type = %d", sportsman.getName(),
-                    sportsman.getCountry().getCid(), SPORT_TYPE.valueOf(sportsman.getSportType().toString()).ordinal());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select sid from Sportsman where name = ? and country_id = ? and sport_type = ?");
+            stm.setString(1, sportsman.getName());
+            stm.setInt(2, sportsman.getCountry().getCid());
+            stm.setInt(3, SPORT_TYPE.valueOf(sportsman.getSportType().toString()).ordinal());
+            ResultSet rs = stm.executeQuery();
             rs.next();
             return rs.getInt("sid");
         } finally {
@@ -171,10 +217,11 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String query = String.format("select rid from Referee where name = '%s' and country_id = %d and sport_type = %d", referee.getName(),
-                    referee.getCountry().getCid(), SPORT_TYPE.valueOf(referee.getSportType().toString()).ordinal());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select rid from Referee where name = ? and country_id = ? and sport_type = ?");
+            stm.setString(1, referee.getName());
+            stm.setInt(2, referee.getCountry().getCid());
+            stm.setInt(3, SPORT_TYPE.valueOf(referee.getSportType().toString()).ordinal());
+            ResultSet rs = stm.executeQuery();
             rs.next();
             return rs.getInt("rid");
         } finally {
@@ -187,10 +234,10 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String query = String.format("select tid from Team where country_id = %d and sport_type = %d",
-                    team.getCountry().getCid(), SPORT_TYPE.valueOf(team.getSportType().toString()).ordinal());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select tid from Team where country_id = ? and sport_type = ?");
+            stm.setInt(1, team.getCountry().getCid());
+            stm.setInt(2, SPORT_TYPE.valueOf(team.getSportType().toString()).ordinal());
+            ResultSet rs = stm.executeQuery();
             rs.next();
             return rs.getInt("tid");
         } finally {
@@ -203,10 +250,11 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String query = String.format("select cid from Competition where stadium_id = %d and sport_type = %d and referee_id = %d",
-                    competition.getStadium().getSid(), SPORT_TYPE.valueOf(competition.getSportType().toString()).ordinal(), competition.getReferee().getPid());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select cid from Competition where stadium_id = ? and sport_type = ? and referee_id = ?");
+            stm.setInt(1, competition.getStadium().getSid());
+            stm.setInt(2, SPORT_TYPE.valueOf(competition.getSportType().toString()).ordinal());
+            stm.setInt(3, competition.getReferee().getPid());
+            ResultSet rs = stm.executeQuery();
             rs.next();
             return rs.getInt("cid");
         } finally {
@@ -338,9 +386,9 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String query = String.format("select sportsman_id from SportsmenToTeam where team_id = %d", team.getTid());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select sportsman_id from SportsmenToTeam where team_id = ?");
+            stm.setInt(1, team.getTid());
+            ResultSet rs = stm.executeQuery();
             List<Sportsman> l = new ArrayList<>();
             while (rs.next()) {
                 Integer id = rs.getInt("sportsman_id");
@@ -387,10 +435,9 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-
-            String query = String.format("select competitor_id,type_competition from Competition join CompetitionToCompetitors on cid=competition_id where cid = %d; ", competition.getCid());
-            ResultSet rs = stm.executeQuery(query);
+            PreparedStatement stm = conn.prepareStatement("select competitor_id,type_competition from Competition join CompetitionToCompetitors on cid=competition_id where cid = ?");
+            stm.setInt(1, competition.getCid());
+            ResultSet rs = stm.executeQuery();
             List<T> l = new ArrayList<>();
             while (rs.next()) {
                 Integer id = rs.getInt("competitor_id");
@@ -412,9 +459,10 @@ public class MySQL {
         try {
             conn = DriverManager.
                     getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
-            Statement stm = conn.createStatement();
-            String sql = String.format("update Country set num_medals = %d where cid = %d", country.getNumOfMedals(), country.getCid());
-            return stm.executeUpdate(sql);
+            PreparedStatement stm = conn.prepareStatement("update Country set num_medals = ? where cid = ?");
+            stm.setInt(1, country.getNumOfMedals());
+            stm.setInt(2, country.getCid());
+            return stm.executeUpdate();
         } finally {
             conn.close();
         }
@@ -433,5 +481,16 @@ public class MySQL {
         }
     }
 
-
+    public static int deleteDateOfOlympiad() throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.
+                    getConnection("jdbc:mysql://localhost:3306/olympics", "root", "ROOT");
+            Statement stm = conn.createStatement();
+            String sql = String.format("delete from OlympicGames");
+            return stm.executeUpdate(sql);
+        } finally {
+            conn.close();
+        }
+    }
 }

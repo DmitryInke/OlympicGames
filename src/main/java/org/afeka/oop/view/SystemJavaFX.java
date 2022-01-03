@@ -274,7 +274,7 @@ public class SystemJavaFX implements AbstractSystemView {
 
         theStage.setOnCloseRequest(action -> {
             for (SystemUIEventsListener l : allListeners)
-                l.resetNumOfMedals();
+                l.resetNumOfMedalsAndDeleteOlympiadDate();
         });
 
         EventHandler<ActionEvent> eventStartDate = e -> {
